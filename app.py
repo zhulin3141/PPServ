@@ -4,14 +4,18 @@
 import wx
 import module
 from lang import *
+from common import *
+import task_bar_icon
 
-VERSION = '1.1'
-APPNAME = 'PPServ'
 
 class App(wx.Frame):
 
     def __init__(self):
         wx.Frame.__init__(self, None, -1, APPNAME + VERSION, size=(1000, 500))
+        self.SetIcon(wx.Icon('icon.ico', wx.BITMAP_TYPE_ICO))
+        self.taskBarIcon = task_bar_icon.TaskBarIcon(self)
+        self.Bind(wx.EVT_CLOSE, self.OnHide)
+        self.Bind(wx.EVT_ICONIZE, self.OnIconfiy)
         self.SetBackgroundColour('white')
         self.Center()
         self.Show()
@@ -59,6 +63,16 @@ class App(wx.Frame):
         self.SetSizer(sizer)
         self.Fit()
 
+    def OnHide(self, event):
+        self.Hide()
+
+    def OnIconfiy(self, event):
+        self.Hide()
+        event.Skip()
+
+    def OnClose(self, event):
+        self.taskBarIcon.Destroy()
+        self.Destroy()
 
 if __name__ == '__main__':
     app = wx.App()

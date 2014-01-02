@@ -3,4 +3,5 @@ conf/conf.json
 
 /bin
 /test
+/.idea
 /__pycache__

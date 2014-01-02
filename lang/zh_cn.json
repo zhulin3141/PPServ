@@ -17,6 +17,7 @@
     "load_config_error" : "配置文件加载错误",
     "is_already_running" : "请求的服务已经启动",
     "is_already_stopped" : "没有启动 %s 服务",
+    "hide_form" : "隐藏",
     "menu_about": "关于",
     "menu_quit": "退出",
 
