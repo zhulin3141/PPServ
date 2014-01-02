@@ -1,0 +1,6 @@
+*.pyc
+conf/conf.json
+
+/bin
+/test
+/__pycache__
