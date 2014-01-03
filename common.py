@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 # coding:utf-8
 
+import os
 import re
+import sys
 import codecs
+import _winreg
 import json
 import collections
 
@@ -42,3 +45,25 @@ def load_json(file_path):
             match = comment_re.search(content)
 
         return json.loads(content, object_pairs_hook=collections.OrderedDict)
+
+def open_hosts(event):
+    '''打开hosts文件'''
+    hostfile = os.environ['SYSTEMROOT'] + '\system32\drivers\etc\hosts'
+    os.system('notepad %s' % hostfile)
+
+def set_autorun(event):
+    '''设置为开机启动'''
+    start = sys.argv[0]
+    run_key_str = r'Software\Microsoft\Windows\CurrentVersion\Run'
+    try:
+        run_key = _winreg.OpenKey(HKEY_CURRENT_USER, run_key_str, 0, KEY_ALL_ACCESS)
+    except:
+        run_key = _winreg.CreateKey(_winreg.HKEY_CURRENT_USER, run_key_str)
+    _winreg.SetValueEx(run_key, APPNAME, 0, _winreg.REG_SZ, start)
+    _winreg.CloseKey(run_key)
+
+def open_main_page(event):
+    '''用默认浏览器打开设置的主页'''
+    import webbrowser
+    port = '80'
+    webbrowser.open("http://localhost:%s" % port)

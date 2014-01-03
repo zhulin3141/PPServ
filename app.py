@@ -48,7 +48,10 @@ class App(wx.Frame):
         oftenSizer = wx.StaticBoxSizer(oftenBox, wx.VERTICAL)
 
         editHostBtn = wx.Button(self, -1, Lang().get('edit_hosts'), size=(110,25))
+        editHostBtn.Bind(wx.EVT_BUTTON, open_hosts)
         startupBtn = wx.Button(self, -1, Lang().get('addto_startup'), size=(110,25))
+        startupBtn.Bind(wx.EVT_BUTTON, set_autorun)
+
         oftenSizer.Add(editHostBtn, 0, wx.ALL, 5)
         oftenSizer.Add(startupBtn, 0, wx.ALL, 5)
 
