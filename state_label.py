@@ -4,6 +4,7 @@
 import wx
 import module
 from common import *
+from conf import Conf
 from module.module_factory import ModuleFactory
 from wx.lib.stattext import GenStaticText
 import webbrowser
@@ -45,3 +46,14 @@ class StateLabel(GenStaticText):
             self.SetCursor(wx.NullCursor)
             self.SetFont(self.normalFont)
         event.Skip()
+
+    def SetLabel(self, label):
+        super(StateLabel, self).SetLabel(label)
+        label = label.upper()
+        stateConfig = Conf().get('state_style')[label]
+
+        if label in [RUNNING,STOPPED,UNKNOWN]:
+            if 'background' in stateConfig:
+                self.SetBackgroundColour(stateConfig['background'])
+            if 'foreground' in stateConfig:
+                self.SetForegroundColour(stateConfig['foreground'])
