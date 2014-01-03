@@ -2,6 +2,9 @@
 # coding:utf-8
 
 import wx
+import module
+from common import *
+from module.module_factory import ModuleFactory
 from wx.lib.stattext import GenStaticText
 import webbrowser
 
@@ -32,7 +35,12 @@ class StateLabel(GenStaticText):
             self.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
             self.SetFont(self.underLineFont)
         elif event.LeftUp():
-            print self.module + 'change status'
+            mod = ModuleFactory.factory(self.module)
+            state = mod.get_state().upper()
+            if state == RUNNING:
+                mod.stop_service()
+            elif state == STOPPED:
+                mod.start_service()
         else:
             self.SetCursor(wx.NullCursor)
             self.SetFont(self.normalFont)
