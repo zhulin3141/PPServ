@@ -2,5 +2,6 @@
 # coding:utf-8
 
 import common
+from base_module import *
 
-loadModules = common.load_json('conf/conf.json')['module']
+loadModules = BaseModule.list_module_data()

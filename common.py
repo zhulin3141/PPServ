@@ -7,11 +7,13 @@ import sys
 import codecs
 import _winreg
 import json
+import subprocess
 import collections
 
 
 VERSION = '1.1'
 APPNAME = 'PPServ'
+BASE_DIR = os.getcwd() + '\\'
 
 def singleton(cls, *args, **kw):
     instances = {}
@@ -67,3 +69,19 @@ def open_main_page(event):
     import webbrowser
     port = '80'
     webbrowser.open("http://localhost:%s" % port)
+
+def execute(cmd, charset='utf-8'):
+    '''用命令提示符执行命令
+
+    Args:
+        cmd: 执行的命令
+        charset: 编码
+
+    Returns:
+        执行的结果
+    '''
+    result = ''
+    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    for line in p.stdout.readlines():
+        result += line.decode(charset)
+    return result

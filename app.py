@@ -3,6 +3,7 @@
 
 import wx
 import module
+from module.module_factory import *
 from lang import *
 from common import *
 import state_label
@@ -67,6 +68,8 @@ class App(wx.Frame):
         self.SetSizer(sizer)
         self.Fit()
 
+        self.Start()
+
     def OnHide(self, event):
         self.Hide()
 
@@ -77,6 +80,13 @@ class App(wx.Frame):
     def OnClose(self, event):
         self.taskBarIcon.Destroy()
         self.Destroy()
+
+    def Start(self):
+        for module_name, mod_data in module.loadModules.items():
+            mod = ModuleFactory.factory(module_name)
+            if not mod.is_install():
+                mod.install_service()
+
 
 if __name__ == '__main__':
     app = wx.App()
