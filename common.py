@@ -15,6 +15,11 @@ VERSION = '1.1'
 APPNAME = 'PPServ'
 BASE_DIR = os.getcwd() + '\\'
 
+#运行状态
+RUNNING = 'RUNNING'
+STOPPED = 'STOPPED'
+UNKNOWN = 'UNKNOWN'
+
 def singleton(cls, *args, **kw):
     instances = {}
     def _singleton():

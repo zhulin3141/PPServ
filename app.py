@@ -84,10 +84,16 @@ class App(wx.Frame):
         self.Destroy()
 
     def Start(self):
+        wx.CallAfter(self.UpdateState)
+
+    def UpdateState(self):
         for module_name, mod_data in module.loadModules.items():
             mod = ModuleFactory.factory(module_name)
-            if not mod.is_install():
+            if mod.is_install():
+                self.lbl[module_name].SetLabel(mod.get_state().lower())
+            else:
                 mod.install_service()
+        wx.CallLater(3000, self.UpdateState)
 
 
 app = wx.App()
