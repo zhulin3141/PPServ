@@ -5,6 +5,7 @@ import wx
 import module
 from lang import *
 from common import *
+import state_label
 import task_bar_icon
 
 
@@ -30,7 +31,7 @@ class App(wx.Frame):
 
         for module_name, mod in module.loadModules.items():
             run = wx.CheckBox(self, -1, module_name, size=[120,13])
-            state = wx.StaticText(self, -1, "stop")
+            state = state_label.StateLabel(self, -1, "stop", mappingData=module_name)
             modSizer.Add(run, 0, wx.ALL, 5)
             modSizer.Add(state, 0, wx.ALL, 5)
 

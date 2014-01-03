@@ -1,0 +1,39 @@
+#!/usr/bin/env python
+# coding:utf-8
+
+import wx
+from wx.lib.stattext import GenStaticText
+import webbrowser
+
+class StateLabel(GenStaticText):
+    """
+    根据状态显示不同的颜色显示
+    """
+
+    def __init__(self, parent, id=-1, label='', pos=(-1, -1),
+        size=(-1, -1), style=0, name='', mappingData=None):
+
+        GenStaticText.__init__(self, parent, id, label, pos, size, style, name)
+
+        self.normalFont = wx.Font(9, wx.SWISS, wx.NORMAL, wx.BOLD, False, 'Verdana')
+        self.underLineFont = wx.Font(9, wx.SWISS, wx.NORMAL, wx.BOLD, True, 'Verdana')
+
+        self.SetFont(self.normalFont)
+        self.SetForegroundColour('red')
+        self.SetBackgroundColour('white')
+
+        self.module = mappingData
+
+        self.Bind(wx.EVT_MOUSE_EVENTS, self.OnMouseEvent)
+        self.Bind(wx.EVT_MOTION, self.OnMouseEvent)
+
+    def OnMouseEvent(self, event):
+        if event.Moving():
+            self.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
+            self.SetFont(self.underLineFont)
+        elif event.LeftUp():
+            print self.module + 'change status'
+        else:
+            self.SetCursor(wx.NullCursor)
+            self.SetFont(self.normalFont)
+        event.Skip()
