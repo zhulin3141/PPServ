@@ -4,6 +4,7 @@
 import wx
 import module
 from module.module_factory import *
+from conf import *
 from lang import *
 from common import *
 import state_label
@@ -30,9 +31,10 @@ class App(wx.Frame):
         runBox = wx.StaticBox(self, -1, Lang().get('autorun_label'), name="run_box")
         runSizer = wx.StaticBoxSizer(runBox, wx.HORIZONTAL)
 
+        self.lbl = {}
         for module_name, mod in module.loadModules.items():
             run = wx.CheckBox(self, -1, module_name, size=[120,13])
-            state = state_label.StateLabel(self, -1, "stop", mappingData=module_name)
+            self.lbl[module_name] = state = state_label.StateLabel(self, -1, "stop", mappingData=module_name)
             modSizer.Add(run, 0, wx.ALL, 5)
             modSizer.Add(state, 0, wx.ALL, 5)
 
@@ -59,8 +61,8 @@ class App(wx.Frame):
         topSizer.Add(oftenSizer, 0, wx.ALL, 10)
 
         stateSizer = wx.BoxSizer(wx.VERTICAL)
-        stateBox = wx.TextCtrl(self, -1, "", size=[600, 100], style=wx.TE_MULTILINE)
-        stateSizer.Add(stateBox, 0, wx.EXPAND | wx.ALL, 10)
+        self.stateBox = wx.TextCtrl(self, -1, "", size=[600, 100], style=wx.TE_MULTILINE)
+        stateSizer.Add(self.stateBox, 0, wx.EXPAND | wx.ALL, 10)
 
         sizer.Add(topSizer, 0)
         sizer.Add(stateSizer, 0, wx.EXPAND)
@@ -88,7 +90,6 @@ class App(wx.Frame):
                 mod.install_service()
 
 
-if __name__ == '__main__':
-    app = wx.App()
-    App().Show()
-    app.MainLoop()
+app = wx.App()
+frame = App()
+app.MainLoop()
