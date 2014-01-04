@@ -11,6 +11,6 @@ class Mod_Memcached(BaseModule):
 
     def install_service(self):
         '''安装服务后根据配置中的数据修改memcached服务的数据'''
-        result = super().install_service(self)
+        result = super(Mod_Memcached, self).install_service()
         execute("sc description %s \"%s\"" % (self.service_name, self.service_name))
         return result
