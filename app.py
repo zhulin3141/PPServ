@@ -34,7 +34,7 @@ class App(wx.Frame):
         self.lbl = {}
         for module_name, mod in module.loadModules.items():
             run = wx.CheckBox(self, -1, module_name, size=[120,13])
-            self.lbl[module_name] = state = state_label.StateLabel(self, -1, "stop", mappingData=module_name)
+            self.lbl[module_name] = state = state_label.StateLabel(self, -1, "stop", size=(50, 15), mappingData=module_name)
             modSizer.Add(run, 0, wx.ALL, 5)
             modSizer.Add(state, 0, wx.ALL, 5)
 
