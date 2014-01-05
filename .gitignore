@@ -2,6 +2,7 @@
 
 /bin
 /conf
+/data
 /test
 /.idea
 /__pycache__

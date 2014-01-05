@@ -6,6 +6,7 @@ import module
 from module.module_factory import *
 from conf import *
 from lang import *
+from cache import *
 from common import *
 import state_label
 import task_bar_icon
@@ -23,6 +24,8 @@ class App(wx.Frame):
         self.Center()
         self.Show()
 
+        self.data = Cache().get()
+
         sizer = wx.BoxSizer(wx.VERTICAL)
 
         topSizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -33,7 +36,13 @@ class App(wx.Frame):
 
         self.lbl = {}
         for module_name, mod in module.loadModules.items():
-            run = wx.CheckBox(self, -1, module_name, size=[120,13])
+            run = wx.CheckBox(self, -1, module_name, size=[120, 13])
+            if run.Label in self.data['autorun'] and self.data['autorun'][run.Label] is True:
+                run.SetValue(True)
+            else:
+                run.SetValue(False)
+            run.Bind(wx.EVT_CHECKBOX, self.SaveSelect)
+
             self.lbl[module_name] = state = state_label.StateLabel(self, -1, "stop", size=(50, 15), mappingData=module_name)
             modSizer.Add(run, 0, wx.ALL, 5)
             modSizer.Add(state, 0, wx.ALL, 5)
@@ -82,6 +91,12 @@ class App(wx.Frame):
     def OnClose(self, event):
         self.taskBarIcon.Destroy()
         self.Destroy()
+
+    def SaveSelect(self, event):
+        """保存选中的自动运行的程序的状态"""
+        sender = event.GetEventObject()
+        self.data['autorun'][sender.Label] = sender.GetValue()
+        Cache().set("autorun", self.data['autorun'])
 
     def Start(self):
         wx.CallAfter(self.UpdateState)
