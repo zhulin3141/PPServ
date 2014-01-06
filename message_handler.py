@@ -10,5 +10,5 @@ class MessageHandler(logging.Handler):
         self.Object = obj
 
     def emit(self, record):
-        tstr = time.strftime('%Y-%m-%d_%H:%M:%S.%U')
+        tstr = time.strftime('%Y-%m-%d %H:%M:%S:%U')
         self.Object.AppendText("[%s][%s] %s\n" % (tstr, record.levelname, record.getMessage()))
