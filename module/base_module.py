@@ -4,6 +4,8 @@
 from common import *
 from lang import *
 import re
+import logging
+from service_manager import *
 
 class BaseModule(object):
     '''模块类
@@ -17,6 +19,7 @@ class BaseModule(object):
         path: 软件所在的目录
         install: 作为服务安装的命令
         uninstall: 卸载服务的命令
+        serviceManager: 服务管理
     '''
 
     def __init__(self, name):
@@ -30,6 +33,9 @@ class BaseModule(object):
         if conf_data is not None:
             for attr,val in conf_data.items():
                 setattr(self, attr, val)
+
+        if hasattr(self, 'service_name'):
+            self.serviceManager = ServiceManager(self.service_name)
 
     @staticmethod
     def list_module_data():
@@ -52,6 +58,8 @@ class BaseModule(object):
         如果服务已安装，并且有卸载命令则执行卸载命令
         '''
         if self.is_install() and hasattr(self, 'uninstall'):
+            #卸载服务前先停止服务
+            self.stop_service()
             if self.uninstall.find('%s') is -1:
                 return execute(self.uninstall).strip()
             else:
@@ -61,38 +69,34 @@ class BaseModule(object):
         '''启动对应的服务'''
         if hasattr(self, 'service_name'):
             if self.get_state() == RUNNING:
-                return Lang().get('is_already_running')
-            return execute('net start %s' % self.service_name).strip()
+                msg = Lang().get('is_already_running')
+            else:
+                msg = self.serviceManager.Start()
+            logging.info(msg)
 
     def stop_service(self):
         '''停止对应的服务'''
         if hasattr(self, 'service_name'):
             if self.get_state() == STOPPED:
-                return Lang().get('is_already_stopped') % self.service_name
-            return execute('net stop %s' % self.service_name).strip()
+                msg = Lang().get('is_already_stopped') % self.service_name
+            else:
+                msg = self.serviceManager.Stop()
+            logging.info(msg)
 
     def is_install(self):
         '''检查服务是否已安装'''
         if hasattr(self, 'service_name'):
-            cmd = "sc query state= all | find \"%s\"" % self.service_name
-            result = execute(cmd)
-            return bool(len(result))
+            return self.serviceManager.IsExists()
         else:
             return True
 
     def get_state(self):
         '''
         获取服务运行的状态
-        Returns: STOPPED,RUNNING,UNKNOWN
+        Returns: STOPPED,RUNNING,STARTING,STOPPING,UNKNOWN
         '''
         if hasattr(self, 'service_name'):
-            result = execute("sc query %s" % self.service_name)
-            state = re.compile(r'STATE\s*:\s*\d*\s*(\w*)')
-            state_str = state.findall(result)
-            if len(state_str):
-                return state_str[0].strip()
-            else:
-                return UNKNOWN
+            return self.serviceManager.Status()
         else:
             return UNKNOWN
 
