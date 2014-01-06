@@ -1,4 +1,7 @@
 *.pyc
+*.log
+
+test.py
 
 /bin
 /conf
