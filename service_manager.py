@@ -3,6 +3,7 @@
 #Requires pywin32 http://sourceforge.net/projects/pywin32/files/pywin32/Build%20218/
 import win32service
 import win32con
+import logging
 from conf import *
 
 class ServiceManager(object):
@@ -18,7 +19,7 @@ class ServiceManager(object):
         try:
             self.handle = win32service.OpenService(self.scm, self.name, win32service.SC_MANAGER_ALL_ACCESS)
         except Exception, e:
-            print e[2].decode(self.encode).encode('utf-8')
+            self.Log(e)
 
     def IsStop(self):
         """检查服务是否停止"""
@@ -28,7 +29,7 @@ class ServiceManager(object):
                 ret = win32service.QueryServiceStatus(self.handle)
                 flag = ret[1] != win32service.SERVICE_RUNNING
         except Exception, e:
-            print e[2].decode(self.encode).encode('utf-8')
+            self.Log(e)
         return flag
 
     def Start(self):
@@ -37,7 +38,7 @@ class ServiceManager(object):
             if self.handle:
                 win32service.StartService(self.handle, None)
         except Exception, e:
-            print e[2].decode(self.encode).encode('utf-8')
+            self.Log(e)
         return win32service.QueryServiceStatus(self.handle)
 
     def Stop(self):
@@ -45,7 +46,7 @@ class ServiceManager(object):
         try:
             status = win32service.ControlService(self.handle, win32service.SERVICE_CONTROL_STOP)
         except Exception, e:
-            print e[2].decode(self.encode).encode('utf-8')
+            self.Log(e)
         return status
 
     def Restart(self):
@@ -69,7 +70,7 @@ class ServiceManager(object):
             elif status == win32service.SERVICE_RUNNING:
                 return "RUNNING"
         except Exception, e:
-            print e[2].decode(self.encode).encode('utf-8')
+            self.Log(e)
 
     def Close(self):
         """释放资源"""
@@ -78,7 +79,7 @@ class ServiceManager(object):
                 win32service.CloseServiceHandle(self.handle)
                 win32service.CloseServiceHandle(self.scm)
         except Exception, e:
-            print e[2].decode(self.encode).encode('utf-8')
+            self.Log(e)
 
     def IsExists(self):
         """windows服务是否已安装"""
@@ -87,3 +88,6 @@ class ServiceManager(object):
             if short_name == self.name:
                 return True
         return False
+
+    def Log(self, exception):
+        logging.exception(exception[2].decode(self.encode).encode('utf-8'))
