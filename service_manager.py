@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # coding:utf-8
-
+#Requires pywin32 http://sourceforge.net/projects/pywin32/files/pywin32/Build%20218/
 import win32service
+import win32con
 
 class ServiceManager(object):
     """管理window服务"""
@@ -12,7 +13,10 @@ class ServiceManager(object):
         """
         self.name = name
         self.scm = win32service.OpenSCManager(None, None, win32service.SC_MANAGER_ALL_ACCESS)
-        self.handle = win32service.OpenService(self.scm, self.name, win32service.SC_MANAGER_ALL_ACCESS)
+        try:
+            self.handle = win32service.OpenService(self.scm, self.name, win32service.SC_MANAGER_ALL_ACCESS)
+        except Exception, e:
+            print e[2]
 
     def IsStop(self):
         """检查服务是否停止"""
@@ -73,3 +77,11 @@ class ServiceManager(object):
                 win32service.CloseServiceHandle(self.scm)
         except Exception, e:
             print e
+
+    def IsExists(self):
+        """windows服务是否已安装"""
+        statuses = win32service.EnumServicesStatus(self.scm, win32service.SERVICE_WIN32, win32service.SERVICE_STATE_ALL)
+        for (short_name, desc, status) in statuses:
+            if short_name == self.name:
+                return True
+        return False
