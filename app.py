@@ -3,6 +3,7 @@
 
 import wx
 import logging
+import logging.config
 import module
 from module.module_factory import *
 from conf import *
@@ -114,6 +115,9 @@ class App(wx.Frame):
         wx.CallLater(3000, self.UpdateState)
 
     def SetLog(self):
+        #从配置文件中设置log
+        logging.config.dictConfig(Conf().get('logging'))
+
         handler = MessageHandler(self.stateBox)
         log = logging.getLogger()
         log.addHandler(handler)
