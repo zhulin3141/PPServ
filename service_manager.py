@@ -5,6 +5,7 @@ import win32service
 import win32con
 import logging
 from conf import *
+from lang import *
 
 class ServiceManager(object):
     """管理window服务"""
@@ -39,15 +40,22 @@ class ServiceManager(object):
                 win32service.StartService(self.handle, None)
         except Exception, e:
             self.Log(e)
-        return win32service.QueryServiceStatus(self.handle)
+        statusInfo = win32service.QueryServiceStatus(self.handle)
+        if statusInfo[1] == win32service.SERVICE_RUNNING:
+            return Lang().get('start_success')
+        else:
+            return Lang().get('start_faild')
 
     def Stop(self):
         """停止服务"""
         try:
-            status = win32service.ControlService(self.handle, win32service.SERVICE_CONTROL_STOP)
+            statusInfo = win32service.ControlService(self.handle, win32service.SERVICE_CONTROL_STOP)
         except Exception, e:
             self.Log(e)
-        return status
+        if statusInfo[1] == win32service.SERVICE_RUNNING:
+            return Lang().get('stop_faild')
+        else:
+            return Lang().get('stop_success')
 
     def Restart(self):
         """重启服务"""

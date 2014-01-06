@@ -19,6 +19,8 @@
     "is_already_stopped" : "没有启动 %s 服务",
     "start_faild" : "启动服务失败",
     "stop_faild" : "停止服务失败",
+    "start_success" : "启动服务成功",
+    "stop_success" : "停止服务成功",
     "hide_form" : "隐藏",
     "menu_about": "关于",
     "menu_quit": "退出",
