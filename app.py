@@ -2,12 +2,14 @@
 # coding:utf-8
 
 import wx
+import logging
 import module
 from module.module_factory import *
 from conf import *
 from lang import *
 from cache import *
 from common import *
+from message_handler import *
 import state_label
 import task_bar_icon
 
@@ -99,6 +101,7 @@ class App(wx.Frame):
         Cache().set("autorun", self.data['autorun'])
 
     def Start(self):
+        self.SetLog()
         wx.CallAfter(self.UpdateState)
 
     def UpdateState(self):
@@ -110,6 +113,11 @@ class App(wx.Frame):
                 mod.install_service()
         wx.CallLater(3000, self.UpdateState)
 
+    def SetLog(self):
+        handler = MessageHandler(self.stateBox)
+        log = logging.getLogger()
+        log.addHandler(handler)
+        log.setLevel(logging.INFO)
 
 app = wx.App()
 frame = App()
