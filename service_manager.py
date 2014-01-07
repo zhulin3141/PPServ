@@ -18,6 +18,10 @@ class ServiceManager(object):
         """
         self.name = name
         self.encode = Conf().get('encoding')
+        #启动或停止服务时等待操作成功等待时间
+        self.waitTime = Conf().get('service_wait_time')
+        #启动或停止服务时最大等待时间，超过时返回超时提示
+        self.delayTime = Conf().get('service_delay')
         self.scm = win32service.OpenSCManager(None, None, win32service.SC_MANAGER_ALL_ACCESS)
         try:
             self.handle = win32service.OpenService(self.scm, self.name, win32service.SC_MANAGER_ALL_ACCESS)
@@ -45,15 +49,15 @@ class ServiceManager(object):
         statusInfo = win32service.QueryServiceStatus(self.handle)
 
         if statusInfo[1] == win32service.SERVICE_RUNNING:
-            return Lang().get('start_success')
-        elif statusInfo[1] == statusInfo[1] == win32service.SERVICE_START_PENDING:
+            return Lang().get('start_success') % self.name
+        elif statusInfo[1] == win32service.SERVICE_START_PENDING:
             #如果服务正在启动中则延迟返回启动信息，直到启动成功,或返回启动时间过长信息
             starttime = datetime.datetime.now()
             while True:
-                if (datetime.datetime.now() - starttime).seconds > Conf().get('start_service_delay'):
+                if (datetime.datetime.now() - starttime).seconds > self.delayTime:
                     return Lang().get('start_long_time') % self.name
 
-                time.sleep(1)
+                time.sleep(self.waitTime)
                 if win32service.QueryServiceStatus(self.handle)[1] == win32service.SERVICE_RUNNING:
                     return Lang().get('start_success') % self.name
         else:
@@ -65,10 +69,19 @@ class ServiceManager(object):
             statusInfo = win32service.ControlService(self.handle, win32service.SERVICE_CONTROL_STOP)
         except Exception, e:
             self.Log(e)
-        if statusInfo[1] == win32service.SERVICE_RUNNING:
-            return Lang().get('stop_faild') % self.name
-        else:
+        if statusInfo[1] == win32service.SERVICE_STOPPED:
             return Lang().get('stop_success') % self.name
+        elif statusInfo[1] == win32service.SERVICE_STOP_PENDING:
+            starttime = datetime.datetime.now()
+            while True:
+                if (datetime.datetime.now() - starttime).seconds > self.delayTime:
+                    return Lang().get('stop_long_time') % self.name
+
+                time.sleep(self.waitTime)
+                if win32service.QueryServiceStatus(self.handle)[1] == win32service.SERVICE_STOPPED:
+                    return Lang().get('stop_success') % self.name
+        else:
+            return Lang().get('stop_faild') % self.name
 
     def Restart(self):
         """重启服务"""
