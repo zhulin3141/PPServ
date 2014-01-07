@@ -69,9 +69,12 @@ class App(wx.Frame):
         editHostBtn.Bind(wx.EVT_BUTTON, open_hosts)
         startupBtn = wx.Button(self, -1, Lang().get('addto_startup'), size=(110,25))
         startupBtn.Bind(wx.EVT_BUTTON, set_autorun)
+        advtBtn = wx.Button(self, -1, Lang().get('advt_setting'), size=(110,25))
+        advtBtn.Bind(wx.EVT_BUTTON, self.showAdvtPanel)
 
         oftenSizer.Add(editHostBtn, 0, wx.ALL, 5)
         oftenSizer.Add(startupBtn, 0, wx.ALL, 5)
+        oftenSizer.Add(advtBtn, 0, wx.ALL, 5)
 
         topSizer.Add(oftenSizer, 0, wx.ALL, 10)
 
@@ -134,6 +137,9 @@ class App(wx.Frame):
                     wx.CallAfter(mod.start_service)
                 else:
                     wx.CallAfter(mod.stop_service)
+
+    def showAdvtPanel(self, event):
+        pass
 
 app = wx.App()
 frame = App()
