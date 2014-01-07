@@ -3,6 +3,8 @@
 #Requires pywin32 http://sourceforge.net/projects/pywin32/files/pywin32/Build%20218/
 import win32service
 import win32con
+import time
+import datetime
 import logging
 from conf import *
 from lang import *
@@ -41,10 +43,21 @@ class ServiceManager(object):
         except Exception, e:
             self.Log(e)
         statusInfo = win32service.QueryServiceStatus(self.handle)
+
         if statusInfo[1] == win32service.SERVICE_RUNNING:
             return Lang().get('start_success')
+        elif statusInfo[1] == statusInfo[1] == win32service.SERVICE_START_PENDING:
+            #如果服务正在启动中则延迟返回启动信息，直到启动成功,或返回启动时间过长信息
+            starttime = datetime.datetime.now()
+            while True:
+                if (datetime.datetime.now() - starttime).seconds > Conf().get('start_service_delay'):
+                    return Lang().get('start_long_time') % self.name
+
+                time.sleep(1)
+                if win32service.QueryServiceStatus(self.handle)[1] == win32service.SERVICE_RUNNING:
+                    return Lang().get('start_success') % self.name
         else:
-            return Lang().get('start_faild')
+            return Lang().get('start_faild') % self.name
 
     def Stop(self):
         """停止服务"""
@@ -53,9 +66,9 @@ class ServiceManager(object):
         except Exception, e:
             self.Log(e)
         if statusInfo[1] == win32service.SERVICE_RUNNING:
-            return Lang().get('stop_faild')
+            return Lang().get('stop_faild') % self.name
         else:
-            return Lang().get('stop_success')
+            return Lang().get('stop_success') % self.name
 
     def Restart(self):
         """重启服务"""
