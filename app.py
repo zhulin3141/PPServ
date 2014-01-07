@@ -50,8 +50,11 @@ class App(wx.Frame):
             modSizer.Add(run, 0, wx.ALL, 5)
             modSizer.Add(state, 0, wx.ALL, 5)
 
-        startAllBtn = wx.Button(self, -1, Lang().get('start_all_service'), size=(120,70))
-        stopAllBtn = wx.Button(self, -1, Lang().get('stop_all_service'), size=(120,70))
+        startAllBtn = wx.Button(self, -1, Lang().get('start_all_service'), size=(120,70), name='start')
+        stopAllBtn = wx.Button(self, -1, Lang().get('stop_all_service'), size=(120,70), name='stop')
+
+        startAllBtn.Bind(wx.EVT_BUTTON, self.batchHandlerServices)
+        stopAllBtn.Bind(wx.EVT_BUTTON, self.batchHandlerServices)
 
         runSizer.Add(modSizer, 0, wx.LEFT | wx.RIGHT, 5)
         runSizer.Add(startAllBtn, 0, wx.TOP | wx.BOTTOM | wx.LEFT, 20)
@@ -122,6 +125,15 @@ class App(wx.Frame):
         log = logging.getLogger()
         log.addHandler(handler)
         log.setLevel(logging.INFO)
+
+    def batchHandlerServices(self, event):
+        for module_name, state in Cache().get("autorun").items():
+            if state is True:
+                mod = ModuleFactory.factory(module_name)
+                if event.GetEventObject().GetName() == "start":
+                    wx.CallAfter(mod.start_service)
+                else:
+                    wx.CallAfter(mod.stop_service)
 
 app = wx.App()
 frame = App()
