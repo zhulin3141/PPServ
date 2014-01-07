@@ -29,7 +29,7 @@ class App(wx.Frame):
 
         self.data = Cache().get()
 
-        sizer = wx.BoxSizer(wx.VERTICAL)
+        self.sizer = wx.BoxSizer(wx.VERTICAL)
 
         topSizer = wx.BoxSizer(wx.HORIZONTAL)
         modSizer = wx.FlexGridSizer(rows=5, cols=2)
@@ -82,10 +82,10 @@ class App(wx.Frame):
         self.stateBox = wx.TextCtrl(self, -1, "", size=[600, 100], style=wx.TE_MULTILINE)
         stateSizer.Add(self.stateBox, 0, wx.EXPAND | wx.ALL, 10)
 
-        sizer.Add(topSizer, 0)
-        sizer.Add(stateSizer, 0, wx.EXPAND)
+        self.sizer.Add(topSizer, 0)
+        self.sizer.Add(stateSizer, 0, wx.EXPAND)
 
-        self.SetSizer(sizer)
+        self.SetSizer(self.sizer)
         self.Fit()
 
         self.Start()
@@ -139,7 +139,7 @@ class App(wx.Frame):
                     wx.CallAfter(mod.stop_service)
 
     def showAdvtPanel(self, event):
-        pass
+        # self.sizer.Hide()
 
 app = wx.App()
 frame = App()
