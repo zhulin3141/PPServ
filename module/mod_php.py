@@ -20,7 +20,7 @@ class Mod_Php(BaseModule):
         self.moduleList = [modName for (isLoaded, modName) in loadModuleData]
         self.moduleLoad = [isLoaded.strip() == '' for (isLoaded, modName) in loadModuleData]
 
-        self.loadList = wx.CheckListBox(phpPanel, -1, (80, 50), wx.DefaultSize, self.moduleList)
+        self.loadList = wx.CheckListBox(phpPanel, -1, size=wx.DefaultSize, choices=self.moduleList)
         self.loadList.Bind(wx.EVT_CHECKLISTBOX, self.change_module_state)
 
         for i, isLoad in enumerate(self.moduleLoad):
