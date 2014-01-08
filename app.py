@@ -62,8 +62,8 @@ class App(wx.Frame):
         startAllBtn = wx.Button(self.basicPanel, -1, Lang().get('start_all_service'), size=(120,70), name='start')
         stopAllBtn = wx.Button(self.basicPanel, -1, Lang().get('stop_all_service'), size=(120,70), name='stop')
 
-        startAllBtn.Bind(wx.EVT_BUTTON, self.batchHandlerServices)
-        stopAllBtn.Bind(wx.EVT_BUTTON, self.batchHandlerServices)
+        startAllBtn.Bind(wx.EVT_BUTTON, self.BatchHandlerServices)
+        stopAllBtn.Bind(wx.EVT_BUTTON, self.BatchHandlerServices)
 
         runSizer = wx.StaticBoxSizer(runBox, wx.HORIZONTAL)
         runSizer.Add(modSizer, 0, wx.LEFT | wx.RIGHT, 5)
@@ -102,13 +102,16 @@ class App(wx.Frame):
         self.Start()
 
     def OnHide(self, event):
+        """隐藏"""
         self.Hide()
 
     def OnIconfiy(self, event):
+        """点击关闭时只退出监控界面"""
         self.Hide()
         event.Skip()
 
     def OnClose(self, event):
+        """退出"""
         self.taskBarIcon.Destroy()
         self.Destroy()
 
@@ -123,6 +126,7 @@ class App(wx.Frame):
         wx.CallAfter(self.UpdateState)
 
     def UpdateState(self):
+        """自动更新各模块的状态显示"""
         for module_name, mod_data in module.loadModules.items():
             mod = ModuleFactory.factory(module_name)
             if mod.is_install():
@@ -140,7 +144,8 @@ class App(wx.Frame):
         log.addHandler(handler)
         log.setLevel(logging.INFO)
 
-    def batchHandlerServices(self, event):
+    def BatchHandlerServices(self, event):
+        """批量处理各模块启动或停止服务"""
         for module_name, state in Cache().get("autorun").items():
             if state is True:
                 mod = ModuleFactory.factory(module_name)
