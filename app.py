@@ -36,7 +36,14 @@ class App(wx.Frame):
         #高级Panel
         self.advtPanel = wx.Panel(self, size=self.GetSize())
         self.advtPanel.SetBackgroundColour('white')
+        advtSizer = wx.BoxSizer(wx.VERTICAL)
+        self.advtPanel.SetSizer(advtSizer)
         self.advtPanel.Hide()
+
+        self.advtTab = wx.Notebook(self.advtPanel)
+        advtSizer.Add(self.advtTab, -1, wx.EXPAND)
+        for mod in ModuleFactory.get_module_list():
+            mod.set_advt_frame(self)
 
         self.data = Cache().get()
 
