@@ -3,6 +3,9 @@
 
 from common import *
 from base_module import BaseModule
+from lang import *
+import wx
+import os
 
 class Mod_Memcached(BaseModule):
     '''Memcached模块类'''
@@ -14,3 +17,13 @@ class Mod_Memcached(BaseModule):
         result = super(Mod_Memcached, self).install_service()
         execute("sc description %s \"%s\"" % (self.service_name, self.service_name))
         return result
+
+    def set_advt_frame(self, parent):
+        memPanel = wx.Panel(parent.advtTab)
+        parent.advtTab.AddPage(memPanel, self.module_name)
+
+        consoleBtn = wx.Button(memPanel, -1, Lang().get('console'))
+        consoleBtn.Bind(wx.EVT_BUTTON, self.open_console)
+
+    def open_console(self, event):
+        os.system('start /D "%s"' % (BASE_DIR + self.path))

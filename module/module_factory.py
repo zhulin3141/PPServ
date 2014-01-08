@@ -6,6 +6,7 @@ from mod_memcached import *
 from mod_apache import *
 from mod_php import *
 from mod_mysql import *
+from conf import *
 
 class ModuleFactory():
     '''模块工厂类
@@ -25,3 +26,12 @@ class ModuleFactory():
             return Mod_Mysql(name)
         else:
             return BaseModule(name)
+
+    @staticmethod
+    def get_module_list(service_list=None):
+        list = []
+        if service_list is None:
+            service_list = Conf().get('module')
+        for module_name in service_list:
+            list.append(ModuleFactory.factory(module_name))
+        return list

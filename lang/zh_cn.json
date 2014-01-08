@@ -23,6 +23,8 @@
     "stop_success" : "停止服务%s成功",
     "start_long_time" : "启动服务%s时间太长",
     "stop_long_time" : "停止服务%s时间太长",
+
+    "console" : "控制台",
     "hide_form" : "隐藏",
     "menu_about": "关于",
     "menu_quit": "退出",
