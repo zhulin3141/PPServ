@@ -24,19 +24,26 @@ class App(wx.Frame):
         self.Bind(wx.EVT_CLOSE, self.OnHide)
         self.Bind(wx.EVT_ICONIZE, self.OnIconfiy)
         self.SetBackgroundColour('white')
+        self.InitUi()
         self.Center()
         self.Show()
+
+    def InitUi(self):
+        self.data = Cache().get()
+        self.lbl = {}
+
+        basicSizer = wx.BoxSizer(wx.VERTICAL)
+        advtSizer = wx.BoxSizer(wx.VERTICAL)
+        topSizer = wx.BoxSizer(wx.HORIZONTAL)
 
         #基本Panel
         self.basicPanel = wx.Panel(self, size=self.GetSize())
         self.basicPanel.SetBackgroundColour('white')
-        basicSizer = wx.BoxSizer(wx.VERTICAL)
         self.basicPanel.SetSizer(basicSizer)
 
         #高级Panel
         self.advtPanel = wx.Panel(self, size=self.GetSize())
         self.advtPanel.SetBackgroundColour('white')
-        advtSizer = wx.BoxSizer(wx.VERTICAL)
         self.advtPanel.SetSizer(advtSizer)
         self.advtPanel.Hide()
 
@@ -45,26 +52,11 @@ class App(wx.Frame):
         for mod in ModuleFactory.get_module_list():
             mod.set_advt_frame(self)
 
-        self.data = Cache().get()
 
-
-        topSizer = wx.BoxSizer(wx.HORIZONTAL)
-        modSizer = wx.FlexGridSizer(rows=5, cols=2)
 
         runBox = wx.StaticBox(self.basicPanel, -1, Lang().get('autorun_label'), name="run_box")
 
-        self.lbl = {}
-        for module_name, mod in module.loadModules.items():
-            run = wx.CheckBox(self.basicPanel, -1, module_name, size=[120, 13])
-            if run.Label in self.data['autorun'] and self.data['autorun'][run.Label] is True:
-                run.SetValue(True)
-            else:
-                run.SetValue(False)
-            run.Bind(wx.EVT_CHECKBOX, self.SaveSelect)
-
-            self.lbl[module_name] = state = state_label.StateLabel(self.basicPanel, -1, "stop", size=(50, 15), mappingData=module_name)
-            modSizer.Add(run, 0, wx.ALL, 5)
-            modSizer.Add(state, 0, wx.ALL, 5)
+        self.CreateModuleList()
 
         startAllBtn = wx.Button(self.basicPanel, -1, Lang().get('start_all_service'), size=(120,70), name='start')
         stopAllBtn = wx.Button(self.basicPanel, -1, Lang().get('stop_all_service'), size=(120,70), name='stop')
@@ -73,40 +65,53 @@ class App(wx.Frame):
         stopAllBtn.Bind(wx.EVT_BUTTON, self.BatchHandlerServices)
 
         runSizer = wx.StaticBoxSizer(runBox, wx.HORIZONTAL)
-        runSizer.Add(modSizer, 0, wx.LEFT | wx.RIGHT, 5)
+        runSizer.Add(self.modSizer, 0, wx.LEFT | wx.RIGHT, 5)
         runSizer.Add(startAllBtn, 0, wx.TOP | wx.BOTTOM | wx.LEFT, 20)
         runSizer.Add(stopAllBtn, 0, wx.ALL, 20)
         topSizer.Add(runSizer, 0, wx.ALL, 10)
 
 
-        oftenBox = wx.StaticBox(self.basicPanel, -1, Lang().get('often_label'), name="often_box")
+        self.CreateOften()
 
-        editHostBtn = wx.Button(self.basicPanel, -1, Lang().get('edit_hosts'), size=(110,25))
-        editHostBtn.Bind(wx.EVT_BUTTON, open_hosts)
-        startupBtn = wx.Button(self.basicPanel, -1, Lang().get('addto_startup'), size=(110,25))
-        startupBtn.Bind(wx.EVT_BUTTON, set_autorun)
-        advtBtn = wx.Button(self.basicPanel, -1, Lang().get('advt_setting'), size=(110,25), name='advt')
-        advtBtn.Bind(wx.EVT_BUTTON, self.Toggle)
-
-        oftenSizer = wx.StaticBoxSizer(oftenBox, wx.VERTICAL)
-        oftenSizer.Add(editHostBtn, 0, wx.ALL, 5)
-        oftenSizer.Add(startupBtn, 0, wx.ALL, 5)
-        oftenSizer.Add(advtBtn, 0, wx.ALL, 5)
-
-        topSizer.Add(oftenSizer, 0, wx.ALL, 10)
 
         self.stateBox = wx.TextCtrl(self.basicPanel, -1, "", size=[600, 100], style=wx.TE_MULTILINE)
         stateSizer = wx.BoxSizer(wx.VERTICAL)
         stateSizer.Add(self.stateBox, 0, wx.EXPAND | wx.ALL, 10)
+        topSizer.Add(self.oftenSizer, 0, wx.ALL, 10)
 
         self.sizer = wx.BoxSizer(wx.VERTICAL)
-        self.sizer.Add(topSizer, 0)
+        self.sizer.Add(topSizer, 1, wx.EXPAND)
         self.sizer.Add(stateSizer, 0, wx.EXPAND)
 
-        self.SetSizer(self.sizer)
-        self.Fit()
+        self.SetSizerAndFit(self.sizer)
 
         self.Start()
+
+    def CreateOften(self):
+        oftenBox = wx.StaticBox(self.basicPanel, -1, Lang().get('often_label'), name="often_box")
+        oftenBtnSize = (110, 25)
+        editHostBtn = wx.Button(self.basicPanel, -1, Lang().get('edit_hosts'), size=oftenBtnSize)
+        editHostBtn.Bind(wx.EVT_BUTTON, open_hosts)
+        startupBtn = wx.Button(self.basicPanel, -1, Lang().get('addto_startup'), size=oftenBtnSize)
+        startupBtn.Bind(wx.EVT_BUTTON, set_autorun)
+        advtBtn = wx.Button(self.basicPanel, -1, Lang().get('advt_setting'), size=oftenBtnSize, name='advt')
+        advtBtn.Bind(wx.EVT_BUTTON, self.Toggle)
+
+        self.oftenSizer = wx.StaticBoxSizer(oftenBox, wx.VERTICAL)
+        self.oftenSizer.Add(editHostBtn, 0, wx.ALL, 5)
+        self.oftenSizer.Add(startupBtn, 0, wx.ALL, 5)
+        self.oftenSizer.Add(advtBtn, 0, wx.ALL, 5)
+
+    def CreateModuleList(self):
+        self.modSizer = wx.FlexGridSizer(rows=5, cols=2)
+        for module_name, mod in module.loadModules.items():
+            run = wx.CheckBox(self.basicPanel, -1, module_name, size=[120, 13])
+            run.SetValue(run.Label in self.data['autorun'] and self.data['autorun'][run.Label])
+            run.Bind(wx.EVT_CHECKBOX, self.SaveSelect)
+
+            self.lbl[module_name] = state_label.StateLabel(self.basicPanel, -1, "stop", size=(50, 15), mappingData=module_name)
+            self.modSizer.Add(run, 0, wx.ALL, 5)
+            self.modSizer.Add(self.lbl[module_name], 0, wx.ALL, 5)
 
     def OnHide(self, event):
         """隐藏"""
