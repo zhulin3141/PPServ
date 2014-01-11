@@ -1,0 +1,10 @@
+####################
+#   test    #
+####################
+test.py
+app.reg
+*.log
+*.pyc
+/bin
+/__pycache__
+/data/cache

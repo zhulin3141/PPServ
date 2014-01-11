@@ -1,0 +1,24 @@
+{
+    "main_title": "PPServ",
+    "tray_title": "PPServ",
+    "about_title": "关于",
+
+    "autorun_label": "自动运行的程序",
+    "often_label": "常用功能",
+    "start_all_service":"启动所有服务",
+    "stop_all_service":"停止所有服务",
+    "edit_hosts":"编辑host",
+    "addto_startup":"设置为开机启动",
+    "basic_setting":"基本设置",
+    "advt_setting":"高级设置",
+
+    "not_install_service" : "服务 %s 没有安装",
+    "module_load_error" : "模块数据加载错误，不存在文件或无效的配置",
+    "load_config_error" : "配置文件加载错误",
+    "is_already_running" : "请求的服务已经启动",
+    "is_already_stopped" : "没有启动 %s 服务",
+    "menu_about": "关于",
+    "menu_quit": "退出",
+
+    "main_page": "localhost"
+}
