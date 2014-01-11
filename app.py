@@ -32,59 +32,49 @@ class App(wx.Frame):
         self.data = Cache().get()
         self.lbl = {}
 
-        basicSizer = wx.BoxSizer(wx.VERTICAL)
-        advtSizer = wx.BoxSizer(wx.VERTICAL)
-        topSizer = wx.BoxSizer(wx.HORIZONTAL)
-
-        #基本Panel
         self.basicPanel = wx.Panel(self, size=self.GetSize())
-        self.basicPanel.SetBackgroundColour('white')
-        self.basicPanel.SetSizer(basicSizer)
-
-        #高级Panel
         self.advtPanel = wx.Panel(self, size=self.GetSize())
-        self.advtPanel.SetBackgroundColour('white')
-        self.advtPanel.SetSizer(advtSizer)
         self.advtPanel.Hide()
 
-        self.advtTab = wx.Notebook(self.advtPanel)
-        advtSizer.Add(self.advtTab, -1, wx.EXPAND)
-        for mod in ModuleFactory.get_module_list():
-            mod.set_advt_frame(self)
+        self.sizer = wx.BoxSizer(wx.VERTICAL)
+        self.basicSizer = wx.BoxSizer(wx.VERTICAL)
+        self.advtSizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.basicPanel.SetSizer(self.basicSizer)
+        self.advtPanel.SetSizer(self.advtSizer)
 
-
-
-        runBox = wx.StaticBox(self.basicPanel, -1, Lang().get('autorun_label'), name="run_box")
+        self.runBox = wx.StaticBox(self.basicPanel, -1, Lang().get('autorun_label'), name="run_box")
 
         self.CreateModuleList()
-
-        startAllBtn = wx.Button(self.basicPanel, -1, Lang().get('start_all_service'), size=(120,70), name='start')
-        stopAllBtn = wx.Button(self.basicPanel, -1, Lang().get('stop_all_service'), size=(120,70), name='stop')
-
+        startAllBtn = wx.Button(self.basicPanel, -1, Lang().get('start_all_service'), size=(120, 70), name='start')
+        stopAllBtn = wx.Button(self.basicPanel, -1, Lang().get('stop_all_service'), size=(120, 70), name='stop')
         startAllBtn.Bind(wx.EVT_BUTTON, self.BatchHandlerServices)
         stopAllBtn.Bind(wx.EVT_BUTTON, self.BatchHandlerServices)
 
-        runSizer = wx.StaticBoxSizer(runBox, wx.HORIZONTAL)
+        runSizer = wx.StaticBoxSizer(self.runBox, wx.HORIZONTAL)
         runSizer.Add(self.modSizer, 0, wx.LEFT | wx.RIGHT, 5)
-        runSizer.Add(startAllBtn, 0, wx.TOP | wx.BOTTOM | wx.LEFT, 20)
-        runSizer.Add(stopAllBtn, 0, wx.ALL, 20)
-        topSizer.Add(runSizer, 0, wx.ALL, 10)
-
+        runSizer.Add(startAllBtn, 0, wx.ALL, 10)
+        runSizer.Add(stopAllBtn, 0, wx.ALL, 10)
 
         self.CreateOften()
+        topSizer = wx.BoxSizer(wx.HORIZONTAL)
+        topSizer.Add(runSizer, 0, wx.ALL)
+        topSizer.Add(self.oftenSizer, 0, wx.LEFT, 10)
+        self.basicSizer.Add(topSizer)
 
+        self.stateBox = wx.TextCtrl(self.basicPanel, -1, "", size=(600, 100), style=wx.TE_MULTILINE)
+        self.basicSizer.Add(self.stateBox, 0, wx.EXPAND | wx.TOP, 5)
 
-        self.stateBox = wx.TextCtrl(self.basicPanel, -1, "", size=[600, 100], style=wx.TE_MULTILINE)
-        stateSizer = wx.BoxSizer(wx.VERTICAL)
-        stateSizer.Add(self.stateBox, 0, wx.EXPAND | wx.ALL, 10)
-        topSizer.Add(self.oftenSizer, 0, wx.ALL, 10)
+        self.advtTab = wx.Notebook(self.advtPanel)
+        self.advtSizer.Add(self.advtTab, -1, wx.EXPAND)
+        for mod in ModuleFactory.get_module_list():
+            mod.set_advt_frame(self)
 
-        self.sizer = wx.BoxSizer(wx.VERTICAL)
-        self.sizer.Add(topSizer, 1, wx.EXPAND)
-        self.sizer.Add(stateSizer, 0, wx.EXPAND)
+        self.advtBox = wx.StaticBox(self.advtPanel, -1, Lang().get('often_label'))
+        self.advtSizer.Add(self.advtBox)
+        self.sizer.Add(self.basicPanel, 1, wx.EXPAND | wx.ALL, 10)
+        self.sizer.Add(self.advtPanel, 1, wx.EXPAND | wx.ALL, 10)
 
         self.SetSizerAndFit(self.sizer)
-
         self.Start()
 
     def CreateOften(self):
