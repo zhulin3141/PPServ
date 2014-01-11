@@ -89,18 +89,18 @@ class App(wx.Frame):
 
     def CreateOften(self):
         oftenBox = wx.StaticBox(self.basicPanel, -1, Lang().get('often_label'), name="often_box")
-        oftenBtnSize = (110, 25)
-        editHostBtn = wx.Button(self.basicPanel, -1, Lang().get('edit_hosts'), size=oftenBtnSize)
-        editHostBtn.Bind(wx.EVT_BUTTON, open_hosts)
-        startupBtn = wx.Button(self.basicPanel, -1, Lang().get('addto_startup'), size=oftenBtnSize)
-        startupBtn.Bind(wx.EVT_BUTTON, set_autorun)
-        advtBtn = wx.Button(self.basicPanel, -1, Lang().get('advt_setting'), size=oftenBtnSize, name='advt')
-        advtBtn.Bind(wx.EVT_BUTTON, self.Toggle)
-
         self.oftenSizer = wx.StaticBoxSizer(oftenBox, wx.VERTICAL)
-        self.oftenSizer.Add(editHostBtn, 0, wx.ALL, 5)
-        self.oftenSizer.Add(startupBtn, 0, wx.ALL, 5)
-        self.oftenSizer.Add(advtBtn, 0, wx.ALL, 5)
+
+        oftenData = (('edit_hosts', open_hosts),
+                     ('addto_startup', set_autorun),
+                     ('advt_setting', self.Toggle))
+
+        oftenBtnSize = (110, 25)
+
+        for label, handler in oftenData:
+            oftenBtn = wx.Button(self.basicPanel, -1, Lang().get(label), size=oftenBtnSize, name=label)
+            oftenBtn.Bind(wx.EVT_BUTTON, handler)
+            self.oftenSizer.Add(oftenBtn, 0, wx.ALL, 5)
 
     def CreateModuleList(self):
         self.modSizer = wx.FlexGridSizer(rows=5, cols=2)
