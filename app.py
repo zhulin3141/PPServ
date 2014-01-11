@@ -65,12 +65,18 @@ class App(wx.Frame):
         self.basicSizer.Add(self.stateBox, 0, wx.EXPAND | wx.TOP, 5)
 
         self.advtTab = wx.Notebook(self.advtPanel)
-        self.advtSizer.Add(self.advtTab, -1, wx.EXPAND)
+        self.advtSizer.Add(self.advtTab, -1, wx.EXPAND | wx.RIGHT, 5)
         for mod in ModuleFactory.get_module_list():
             mod.set_advt_frame(self)
 
+        oftenBtnSize = (110, 25)
         self.advtBox = wx.StaticBox(self.advtPanel, -1, Lang().get('often_label'))
-        self.advtSizer.Add(self.advtBox)
+        self.advtOftenSizer = wx.StaticBoxSizer(self.advtBox, wx.VERTICAL)
+        basicBtn = wx.Button(self.advtPanel, -1, Lang().get('basic_setting'), size=oftenBtnSize, name='basic')
+        basicBtn.Bind(wx.EVT_BUTTON, self.Toggle)
+        self.advtOftenSizer.Add(basicBtn, 1, wx.EXPAND | wx.ALL, 5)
+        self.advtSizer.Add(self.advtOftenSizer, 0, wx.RIGHT, 5)
+
         self.sizer.Add(self.basicPanel, 1, wx.EXPAND | wx.ALL, 10)
         self.sizer.Add(self.advtPanel, 1, wx.EXPAND | wx.ALL, 10)
 
