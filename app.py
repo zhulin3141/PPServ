@@ -155,7 +155,7 @@ class App(wx.Frame):
     def BatchHandlerServices(self, event):
         """批量处理各模块启动或停止服务"""
         for module_name, state in Cache().get("autorun").items():
-            if state is True:
+            if state:
                 mod = ModuleFactory.factory(module_name)
                 if event.GetEventObject().GetName() == "start":
                     wx.CallAfter(mod.start_service)
