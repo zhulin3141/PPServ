@@ -40,7 +40,7 @@ class App(wx.Frame):
         self.InitAdvtPanel()
 
         self.sizer.Add(self.basicPanel, 1, wx.EXPAND | wx.ALL, 10)
-        self.sizer.Add(self.advtPanel, 1, wx.EXPAND | wx.ALL, 10)
+        self.sizer.Add(self.advtPanel, 1, wx.EXPAND | wx.ALL, 0)
 
         self.SetSizerAndFit(self.sizer)
         self.Start()
