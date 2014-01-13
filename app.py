@@ -18,7 +18,7 @@ import task_bar_icon
 class App(wx.Frame):
 
     def __init__(self):
-        wx.Frame.__init__(self, None, -1, APPNAME + VERSION, size=(1000, 500))
+        wx.Frame.__init__(self, None, -1, APPNAME + VERSION, size=(800, 230))
         self.SetIcon(wx.Icon('icon.ico', wx.BITMAP_TYPE_ICO))
         self.taskBarIcon = task_bar_icon.TaskBarIcon(self)
         self.Bind(wx.EVT_CLOSE, self.OnHide)
@@ -100,7 +100,7 @@ class App(wx.Frame):
 
     def CreateModuleList(self):
         self.modSizer = wx.FlexGridSizer(rows=5, cols=2)
-        for module_name, mod in module.loadModules.items():
+        for module_name, mod in BaseModule.list_module_data().items():
             run = wx.CheckBox(self.basicPanel, -1, module_name, size=[120, 13])
             run.SetValue(run.Label in self.data['autorun'] and self.data['autorun'][run.Label])
             run.Bind(wx.EVT_CHECKBOX, self.SaveSelect)
@@ -135,7 +135,7 @@ class App(wx.Frame):
 
     def UpdateState(self):
         """自动更新各模块的状态显示"""
-        for module_name, mod_data in module.loadModules.items():
+        for module_name, mod_data in BaseModule.list_module_data().items():
             mod = ModuleFactory.factory(module_name)
             if mod.is_install():
                 self.lbl[module_name].SetLabel(mod.get_state().lower())
