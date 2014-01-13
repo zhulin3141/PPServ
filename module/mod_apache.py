@@ -27,6 +27,10 @@ class Mod_Apache(BaseModule):
         for i, isLoad in enumerate(self.moduleLoad):
             self.loadList.Check(i, isLoad)
 
+        wx.TextCtrl(apachePanel, -1, self.get_default_port())
+        wx.TextCtrl(apachePanel, -1, self.get_doc_root())
+        sizer = wx.BoxSizer(wx.VERTICAL)
+
     def change_module_state(self, event):
         index = event.GetInt()
         moduleName = self.moduleList[index]
@@ -35,3 +39,9 @@ class Mod_Apache(BaseModule):
             self.replace(self.conf_file, r'#+LoadModule ' + moduleName, 'LoadModule ' + moduleName)
         else:
             self.replace(self.conf_file, r'LoadModule ' + moduleName, '#LoadModule ' + moduleName)
+
+    def get_default_port(self):
+        return "80"
+
+    def get_doc_root(self):
+        return "d:/wamp/www/"
