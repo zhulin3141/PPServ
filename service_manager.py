@@ -23,10 +23,15 @@ class ServiceManager(object):
         #启动或停止服务时最大等待时间，超过时返回超时提示
         self.delayTime = Conf().get('service_delay')
         self.scm = win32service.OpenSCManager(None, None, win32service.SC_MANAGER_ALL_ACCESS)
-        try:
-            self.handle = win32service.OpenService(self.scm, self.name, win32service.SC_MANAGER_ALL_ACCESS)
-        except Exception, e:
-            self.Log(e)
+
+
+        if self.IsExists():
+            try:
+                self.handle = win32service.OpenService(self.scm, self.name, win32service.SC_MANAGER_ALL_ACCESS)
+            except Exception, e:
+                self.Log(e)
+        else:
+            print Lang().get('not_install_service') % self.name
 
     def IsStop(self):
         """检查服务是否停止"""
