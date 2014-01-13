@@ -2,7 +2,6 @@
 # coding:utf-8
 
 import wx
-import module
 from common import *
 from conf import Conf
 from module.module_factory import ModuleFactory

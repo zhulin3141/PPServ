@@ -4,7 +4,6 @@
 import wx
 import logging
 import logging.config
-import module
 from module.module_factory import *
 from conf import *
 from lang import *
@@ -51,10 +50,11 @@ class App(wx.Frame):
         self.basicPanel.SetSizer(self.basicSizer)
 
         self.runBox = wx.StaticBox(self.basicPanel, -1, Lang().get('autorun_label'), name="run_box")
-
         self.CreateModuleList()
-        startAllBtn = wx.Button(self.basicPanel, -1, Lang().get('start_all_service'), size=(120, 70), name='start')
-        stopAllBtn = wx.Button(self.basicPanel, -1, Lang().get('stop_all_service'), size=(120, 70), name='stop')
+
+        runBtnSize = (120, 70)
+        startAllBtn = wx.Button(self.basicPanel, -1, Lang().get('start_all_service'), size=runBtnSize, name='start')
+        stopAllBtn = wx.Button(self.basicPanel, -1, Lang().get('stop_all_service'), size=runBtnSize, name='stop')
         startAllBtn.Bind(wx.EVT_BUTTON, self.BatchHandlerServices)
         stopAllBtn.Bind(wx.EVT_BUTTON, self.BatchHandlerServices)
 
