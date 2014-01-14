@@ -10,9 +10,11 @@ class Mod_Mysql(BaseModule):
     '''Mysql模块类'''
     def __init__(self, name):
         BaseModule.__init__(self, name)
+        self.setting_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
     def set_advt_frame(self, parent):
         self.setting_panel = wx.Panel(parent)
+        self.setting_panel.SetSizer(self.setting_sizer)
         parent.AddPage(self.setting_panel, self.module_name)
 
         consoleBtn = wx.Button(self.setting_panel, -1, Lang().get('console'))
