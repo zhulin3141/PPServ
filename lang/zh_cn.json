@@ -12,6 +12,10 @@
     "basic_setting":"基本设置",
     "advt_setting":"高级设置",
 
+    //apache
+    "apache_port" : "端口",
+    "apache_doc_root" : "根目录",
+
     "not_install_service" : "服务 %s 没有安装",
     "module_load_error" : "模块数据加载错误，不存在文件或无效的配置",
     "load_config_error" : "配置文件加载错误",

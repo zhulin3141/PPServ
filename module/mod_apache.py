@@ -5,6 +5,7 @@ from common import *
 from base_module import BaseModule
 import re
 import wx
+from lang import Lang
 
 class Mod_Apache(BaseModule):
     '''Apache模块类'''
@@ -26,10 +27,17 @@ class Mod_Apache(BaseModule):
 
         self.set_load_module()
 
-        port = wx.TextCtrl(self.setting_panel, -1, self.get_default_port())
-        doc_root = wx.TextCtrl(self.setting_panel, -1, self.get_doc_root())
-        self.setting_sizer.Add(port)
-        self.setting_sizer.Add(doc_root)
+        self.grid_sizer = wx.FlexGridSizer(rows=5, cols=2)
+        lbl_port = wx.StaticText(self.setting_panel, -1, Lang().get('apache_port'))
+        port = wx.TextCtrl(self.setting_panel, -1, self.get_default_port(), size=(200, 20))
+        lbl_doc_root = wx.StaticText(self.setting_panel, -1, Lang().get('apache_doc_root'))
+        doc_root = wx.TextCtrl(self.setting_panel, -1, self.get_doc_root(), size=(200, 20))
+        self.grid_sizer.Add(lbl_port, 0, wx.ALL, 5)
+        self.grid_sizer.Add(port)
+        self.grid_sizer.Add(lbl_doc_root, 0, wx.ALL, 5)
+        self.grid_sizer.Add(doc_root)
+
+        self.setting_sizer.Add(self.grid_sizer)
 
     def change_module_state(self, event):
         index = event.GetInt()
@@ -45,13 +53,13 @@ class Mod_Apache(BaseModule):
         self.moduleList = [modName for (isLoaded, modName) in loadModuleData]
         self.moduleLoad = [isLoaded.strip() == '' for (isLoaded, modName) in loadModuleData]
 
-        self.loadList = wx.CheckListBox(self.setting_panel, -1, size=wx.DefaultSize, choices=self.moduleList)
+        self.loadList = wx.CheckListBox(self.setting_panel, -1, choices=self.moduleList)
         self.loadList.Bind(wx.EVT_CHECKLISTBOX, self.change_module_state)
 
         for i, isLoad in enumerate(self.moduleLoad):
             self.loadList.Check(i, isLoad)
 
-        self.setting_sizer.Add(self.loadList)
+        self.setting_sizer.Add(self.loadList, 0, wx.EXPAND)
 
     def get_default_port(self):
         return self.listen_ports[0]
