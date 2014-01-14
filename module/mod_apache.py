@@ -5,6 +5,7 @@ from common import *
 from base_module import BaseModule
 import re
 import wx
+import os
 from lang import Lang
 
 class Mod_Apache(BaseModule):
@@ -19,6 +20,7 @@ class Mod_Apache(BaseModule):
         self.content = open(self.conf_file,'r').read()
         self.listen_ports = re.findall('^Listen +([0-9]+)', self.content, re.M)
         self.doc_root = re.findall('^DocumentRoot +(.+)', self.content, re.M)
+        self.error_log_file = re.findall('^ErrorLog +(.+)', self.content, re.M)
 
     def set_advt_frame(self, parent):
         self.setting_panel = wx.Panel(parent)
@@ -32,12 +34,19 @@ class Mod_Apache(BaseModule):
         port = wx.TextCtrl(self.setting_panel, -1, self.get_default_port(), size=(200, 20))
         lbl_doc_root = wx.StaticText(self.setting_panel, -1, Lang().get('apache_doc_root'))
         doc_root = wx.TextCtrl(self.setting_panel, -1, self.get_doc_root(), size=(200, 20))
+        conf_btn = wx.Button(self.setting_panel, -1, Lang().get('apache_config_file'))
+        conf_btn.Bind(wx.EVT_BUTTON, self.open_config_file)
+        log_btn = wx.Button(self.setting_panel, -1, Lang().get('apache_log_file'))
+        log_btn.Bind(wx.EVT_BUTTON, self.open_log_file)
+
         self.grid_sizer.Add(lbl_port, 0, wx.ALL, 5)
         self.grid_sizer.Add(port)
         self.grid_sizer.Add(lbl_doc_root, 0, wx.ALL, 5)
         self.grid_sizer.Add(doc_root)
+        self.grid_sizer.Add(conf_btn)
+        self.grid_sizer.Add(log_btn)
 
-        self.setting_sizer.Add(self.grid_sizer)
+        self.setting_sizer.Add(self.grid_sizer, 0, wx.ALL, 5)
 
     def change_module_state(self, event):
         index = event.GetInt()
@@ -66,3 +75,9 @@ class Mod_Apache(BaseModule):
 
     def get_doc_root(self):
         return self.doc_root[0].strip("\"' ")
+
+    def open_log_file(self, event):
+        os.system('notepad %s' % self.error_log_file)
+
+    def open_config_file(self, event):
+        os.system('notepad %s' % self.conf_file)
