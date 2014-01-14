@@ -29,22 +29,31 @@ class Mod_Apache(BaseModule):
 
         self.set_load_module()
 
-        self.grid_sizer = wx.FlexGridSizer(rows=5, cols=2)
+        self.grid_sizer = wx.FlexGridSizer(rows=5, cols=3)
         lbl_port = wx.StaticText(self.setting_panel, -1, Lang().get('apache_port'))
-        port = wx.TextCtrl(self.setting_panel, -1, self.get_default_port(), size=(200, 20))
+        self.cfg_port = wx.TextCtrl(self.setting_panel, -1, self.get_default_port(), size=(200, 20))
         lbl_doc_root = wx.StaticText(self.setting_panel, -1, Lang().get('apache_doc_root'))
-        doc_root = wx.TextCtrl(self.setting_panel, -1, self.get_doc_root(), size=(200, 20))
+        self.cfg_doc_root = wx.TextCtrl(self.setting_panel, -1, self.get_doc_root(), size=(200, 20))
+
         conf_btn = wx.Button(self.setting_panel, -1, Lang().get('apache_config_file'))
         conf_btn.Bind(wx.EVT_BUTTON, self.open_config_file)
         log_btn = wx.Button(self.setting_panel, -1, Lang().get('apache_log_file'))
         log_btn.Bind(wx.EVT_BUTTON, self.open_log_file)
 
-        self.grid_sizer.Add(lbl_port, 0, wx.ALL, 5)
-        self.grid_sizer.Add(port)
-        self.grid_sizer.Add(lbl_doc_root, 0, wx.ALL, 5)
-        self.grid_sizer.Add(doc_root)
-        self.grid_sizer.Add(conf_btn)
-        self.grid_sizer.Add(log_btn)
+        save_btn = wx.Button(self.setting_panel, -1, Lang().get('apache_save_config'))
+        save_btn.Bind(wx.EVT_BUTTON, self.save_config)
+
+        self.grid_sizer.AddMany([
+            (lbl_port, 0, wx.ALL, 5),
+            (self.cfg_port),
+            (wx.StaticText(self.setting_panel), wx.EXPAND),
+            (lbl_doc_root, 0, wx.ALL, 5),
+            (self.cfg_doc_root),
+            (wx.StaticText(self.setting_panel), wx.EXPAND),
+            (conf_btn),
+            (log_btn),
+            (save_btn)
+        ])
 
         self.setting_sizer.Add(self.grid_sizer, 0, wx.ALL, 5)
 
@@ -81,3 +90,8 @@ class Mod_Apache(BaseModule):
 
     def open_config_file(self, event):
         os.system('notepad %s' % self.conf_file)
+
+    def save_config(self, event):
+        #保存配置
+        print self.cfg_port.GetLabelText(),self.cfg_doc_root.GetLabelText()
+
