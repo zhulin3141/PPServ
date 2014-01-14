@@ -12,10 +12,10 @@ class Mod_Mysql(BaseModule):
         BaseModule.__init__(self, name)
 
     def set_advt_frame(self, parent):
-        mysqlPanel = wx.Panel(parent.advtTab)
-        parent.advtTab.AddPage(mysqlPanel, self.module_name)
+        self.setting_panel = wx.Panel(parent)
+        parent.AddPage(self.setting_panel, self.module_name)
 
-        consoleBtn = wx.Button(mysqlPanel, -1, Lang().get('console'))
+        consoleBtn = wx.Button(self.setting_panel, -1, Lang().get('console'))
         consoleBtn.Bind(wx.EVT_BUTTON, self.open_console)
 
     def open_console(self, event):

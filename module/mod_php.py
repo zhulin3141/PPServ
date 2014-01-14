@@ -12,15 +12,15 @@ class Mod_Php(BaseModule):
         self.conf_file = BASE_DIR + self.path + "\php.ini"
 
     def set_advt_frame(self, parent):
-        phpPanel = wx.Panel(parent.advtTab)
-        parent.advtTab.AddPage(phpPanel, self.module_name)
+        self.setting_panel = wx.Panel(parent)
+        parent.AddPage(self.setting_panel, self.module_name)
 
         content = open(self.conf_file,'r').read()
         loadModuleData = re.findall('(^;*)extension=(php_.*).dll', content, re.M)
         self.moduleList = [modName for (isLoaded, modName) in loadModuleData]
         self.moduleLoad = [isLoaded.strip() == '' for (isLoaded, modName) in loadModuleData]
 
-        self.loadList = wx.CheckListBox(phpPanel, -1, size=wx.DefaultSize, choices=self.moduleList)
+        self.loadList = wx.CheckListBox(self.setting_panel, -1, size=wx.DefaultSize, choices=self.moduleList)
         self.loadList.Bind(wx.EVT_CHECKLISTBOX, self.change_module_state)
 
         for i, isLoad in enumerate(self.moduleLoad):

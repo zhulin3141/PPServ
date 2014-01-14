@@ -13,22 +13,22 @@ class Mod_Apache(BaseModule):
         self.conf_file = BASE_DIR + self.path + "\conf\httpd.conf"
 
     def set_advt_frame(self, parent):
-        apachePanel = wx.Panel(parent.advtTab)
-        parent.advtTab.AddPage(apachePanel, self.module_name)
+        self.setting_panel = wx.Panel(parent)
+        parent.AddPage(self.setting_panel, self.module_name)
 
         content = open(self.conf_file,'r').read()
         loadModuleData = re.findall('(^#*)LoadModule (.+_module)', content, re.M)
         self.moduleList = [modName for (isLoaded, modName) in loadModuleData]
         self.moduleLoad = [isLoaded.strip() == '' for (isLoaded, modName) in loadModuleData]
 
-        self.loadList = wx.CheckListBox(apachePanel, -1, size=wx.DefaultSize, choices=self.moduleList)
+        self.loadList = wx.CheckListBox(self.setting_panel, -1, size=wx.DefaultSize, choices=self.moduleList)
         self.loadList.Bind(wx.EVT_CHECKLISTBOX, self.change_module_state)
 
         for i, isLoad in enumerate(self.moduleLoad):
             self.loadList.Check(i, isLoad)
 
-        wx.TextCtrl(apachePanel, -1, self.get_default_port())
-        wx.TextCtrl(apachePanel, -1, self.get_doc_root())
+        wx.TextCtrl(self.setting_panel, -1, self.get_default_port(), pos=(30, 20))
+        wx.TextCtrl(self.setting_panel, -1, self.get_doc_root(), pos=(50, 20))
         sizer = wx.BoxSizer(wx.VERTICAL)
 
     def change_module_state(self, event):

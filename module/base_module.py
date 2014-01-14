@@ -20,6 +20,7 @@ class BaseModule(object):
         install: 作为服务安装的命令
         uninstall: 卸载服务的命令
         serviceManager: 服务管理
+        setting_panel: 设置panel
     '''
 
     def __init__(self, name):
@@ -27,6 +28,7 @@ class BaseModule(object):
         try:
             conf_data = BaseModule.list_module_data()[name]
             self.module_name = name
+            self.setting_panel = None
         except:
             print(Lang().get('module_load_error'))
         
@@ -101,7 +103,7 @@ class BaseModule(object):
             return UNKNOWN
 
     def set_advt_frame(self, parent):
-        pass
+        self.setting_panel = wx.Panel(parent)
 
     def replace(self, file, pattern, subst):
         '''替换文件中的字符串'''

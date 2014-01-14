@@ -79,7 +79,7 @@ class App(wx.Frame):
         self.advtTab = wx.Notebook(self.advtPanel)
         self.advtSizer.Add(self.advtTab, -1, wx.EXPAND | wx.RIGHT, 5)
         for mod in ModuleFactory.get_module_list():
-            mod.set_advt_frame(self)
+            mod.set_advt_frame(self.advtTab)
 
         self.advtBox = wx.StaticBox(self.advtPanel, -1, Lang().get('often_label'))
         self.advtOftenSizer = wx.StaticBoxSizer(self.advtBox, wx.VERTICAL)
