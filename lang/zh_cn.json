@@ -17,6 +17,8 @@
     "apache_doc_root" : "根目录",
     "apache_config_file" : "配置文件",
     "apache_log_file" : "日志",
+    "apache_save_config" : "保存",
+    "apache_choose_doc_root" : "选择根目录",
 
     "not_install_service" : "服务 %s 没有安装",
     "module_load_error" : "模块数据加载错误，不存在文件或无效的配置",
