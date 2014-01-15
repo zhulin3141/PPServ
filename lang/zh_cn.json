@@ -20,6 +20,9 @@
     "apache_save_config" : "保存",
     "apache_choose_doc_root" : "选择根目录",
 
+    //php
+    "php_save_config" : "保存",
+
     "not_install_service" : "服务 %s 没有安装",
     "module_load_error" : "模块数据加载错误，不存在文件或无效的配置",
     "load_config_error" : "配置文件加载错误",
