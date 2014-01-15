@@ -103,7 +103,11 @@ class Mod_Apache(BaseModule):
 
     def save_config(self, event):
         #保存配置
-        print self.cfg_port.GetLabelText(),self.cfg_doc_root.GetLabelText()
+        self.replace(self.conf_file, r'^Listen +([0-9]+)', 'Listen ' + self.cfg_port.GetValue(), 1)
+        self.replace(self.conf_file, r'^DocumentRoot +(.+)', 'DocumentRoot ' + self.cfg_doc_root.GetValue())
+        self.replace(self.conf_file, r'^<Directory "%s">' % self.doc_root[0].replace('\\','\\\\'),
+            '<Directory "%s">' % self.cfg_doc_root.GetValue(), 1)
+        self.parse_config_file()
 
     def choose_dir(self, event):
         #选择并更新根目录
