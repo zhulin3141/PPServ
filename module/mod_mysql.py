@@ -21,4 +21,4 @@ class Mod_Mysql(BaseModule):
         consoleBtn.Bind(wx.EVT_BUTTON, self.open_console)
 
     def open_console(self, event):
-        os.system('start /D "%s" mysql -u root' % (BASE_DIR + self.path + '\\bin'))
+        os.system('start /D "%s" mysql -u root -p' % (BASE_DIR + self.path + '\\bin'))
