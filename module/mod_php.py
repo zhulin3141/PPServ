@@ -80,7 +80,7 @@ class Mod_Php(BaseModule):
         self.setting_sizer.Add(self.loadList, 0, wx.EXPAND)
 
     def open_config_file(self, event):
-        os.system('notepad %s' % self.conf_file)
+        open_file(self.conf_file)
 
     def save_config(self, event):
         #保存配置

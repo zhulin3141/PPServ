@@ -95,10 +95,10 @@ class Mod_Apache(BaseModule):
         return self.doc_root[0].strip("\"' ")
 
     def open_log_file(self, event):
-        os.system('notepad %s' % self.error_log_file)
+        open_file(self.error_log_file)
 
     def open_config_file(self, event):
-        os.system('notepad %s' % self.conf_file)
+        open_file(self.conf_file)
 
     def save_config(self, event):
         #保存配置

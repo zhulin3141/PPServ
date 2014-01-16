@@ -42,7 +42,7 @@ class Mod_Mysql(BaseModule):
         parent.AddPage(self.setting_panel, self.module_name)
 
     def open_config_file(self, event):
-        os.system('notepad %s' % self.conf_file)
+        open_file(self.conf_file)
 
     def open_console(self, event):
         open_cmd(self.path + '\\bin', 'mysql -u root -p')
