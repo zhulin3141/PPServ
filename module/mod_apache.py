@@ -12,7 +12,6 @@ class Mod_Apache(BaseModule):
     '''Apache模块类'''
     def __init__(self, name):
         BaseModule.__init__(self, name)
-        self.setting_sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.conf_file = BASE_DIR + self.path + "\conf\httpd.conf"
         self.parse_config_file()
 

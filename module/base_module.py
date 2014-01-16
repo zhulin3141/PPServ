@@ -6,6 +6,7 @@ from lang import *
 import re
 import logging
 from service_manager import *
+import wx
 
 class BaseModule(object):
     '''模块类
@@ -29,6 +30,7 @@ class BaseModule(object):
             conf_data = BaseModule.list_module_data()[name]
             self.module_name = name
             self.setting_panel = None
+            self.setting_sizer = wx.BoxSizer(wx.HORIZONTAL)
         except:
             print(Lang().get('module_load_error'))
         

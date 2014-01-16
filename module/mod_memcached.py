@@ -12,7 +12,6 @@ class Mod_Memcached(BaseModule):
     '''Memcached模块类'''
     def __init__(self, name):
         BaseModule.__init__(self, name)
-        self.setting_sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.reg_base_path = ''
         self.params_list = []
 
