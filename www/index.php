@@ -80,9 +80,12 @@ PAGE;
 
 function mem_status()
 {
+  global $config;
+  $config = object_to_array($config);
+
   $mem = new Memcache;
   $host = "127.0.0.1";
-  $port = 11211;
+  $port = isset($config['module']['memcached1.2.6']['port']) ? $config['module']['memcached1.2.6']['port'] : 11211;
   $mem->connect($host, $port);
 
   print "<table style='border: 1px solid #D9D9D9;'>";
@@ -97,4 +100,16 @@ function mem_status()
   print "</p>";
 
   $mem->flush();
+}
+
+function object_to_array($obj)
+{
+  $arr = array();
+  $_arr = is_object($obj) ? get_object_vars($obj) : $obj;
+  foreach ($_arr as $key => $val)
+  {
+    $val = (is_array($val) || is_object($val)) ? object_to_array($val) : $val;
+    $arr[$key] = $val;
+  }
+  return $arr;
 }
