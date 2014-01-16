@@ -42,11 +42,15 @@ class Mod_Php(BaseModule):
             self.grid_sizer.Add(lbl, 0, wx.ALL, 5)
             self.grid_sizer.Add(txt, 0, wx.ALL, 3)
 
+        conf_btn = wx.Button(self.setting_panel, -1, Lang().get('php_config_file'))
+        conf_btn.Bind(wx.EVT_BUTTON, self.open_config_file)
+
         save_btn = wx.Button(self.setting_panel, -1, Lang().get('php_save_config'))
         save_btn.Bind(wx.EVT_BUTTON, self.save_config)
 
         self.handler_sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.handler_sizer.AddMany([
+            (conf_btn),
             (save_btn)
         ])
 
@@ -75,6 +79,9 @@ class Mod_Php(BaseModule):
             self.loadList.Check(i, isLoad)
 
         self.setting_sizer.Add(self.loadList, 0, wx.EXPAND)
+
+    def open_config_file(self, event):
+        os.system('notepad %s' % self.conf_file)
 
     def save_config(self, event):
         #保存配置

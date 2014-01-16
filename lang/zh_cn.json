@@ -23,6 +23,7 @@
 
     //php
     "php_save_config" : "保存",
+    "php_config_file" : "配置文件",
 
     //memcache
     "mem_save_config" : "保存",
