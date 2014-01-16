@@ -98,4 +98,5 @@ def open_cmd(path='', cmd=''):
     os.system('start /D "%s" %s' % (BASE_DIR + path, cmd))
 
 def open_file(file):
-    os.system('notepad %s' % file)
+    import conf
+    subprocess.Popen([conf.Conf().get('default_editor'), file])

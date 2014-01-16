@@ -7,7 +7,7 @@
     "service_delay" : 10,
     "service_wait_time" : 0.5,
 
-    "default_editor" : "",
+    "default_editor" : "notepad",
 
     "module" : {
         "apache2.2.17" : {
