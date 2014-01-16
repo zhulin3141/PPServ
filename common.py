@@ -13,6 +13,7 @@ import collections
 
 VERSION = '1.1'
 APPNAME = 'PPServ'
+AUTHOR = 'zhulin3141@gmail.com'
 BASE_DIR = os.getcwd() + '\\'
 
 #运行状态

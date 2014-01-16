@@ -2,6 +2,7 @@
     "main_title": "PPServ",
     "tray_title": "PPServ",
     "about_title": "关于",
+    "author" : "作者",
 
     "autorun_label": "自动运行的程序",
     "often_label": "常用功能",
