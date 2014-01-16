@@ -6,6 +6,7 @@ from lang import *
 import re
 import logging
 from service_manager import *
+import wx
 
 class BaseModule(object):
     '''模块类
@@ -29,6 +30,7 @@ class BaseModule(object):
             conf_data = BaseModule.list_module_data()[name]
             self.module_name = name
             self.setting_panel = None
+            self.setting_sizer = wx.BoxSizer(wx.HORIZONTAL)
         except:
             print(Lang().get('module_load_error'))
         
@@ -105,13 +107,13 @@ class BaseModule(object):
     def set_advt_frame(self, parent):
         self.setting_panel = wx.Panel(parent)
 
-    def replace(self, file, pattern, subst):
+    def replace(self, file, pattern, subst, count=0, flags=re.MULTILINE):
         '''替换文件中的字符串'''
         file_handle = open(file, 'r')
         file_string = file_handle.read()
         file_handle.close()
 
-        file_string = (re.sub(pattern, subst, file_string))
+        file_string = (re.sub(pattern, subst, file_string, count, flags))
 
         file_handle = open(file, 'w')
         file_handle.write(file_string)

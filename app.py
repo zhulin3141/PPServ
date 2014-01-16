@@ -30,6 +30,11 @@ class App(wx.Frame):
     def InitUi(self):
         self.data = Cache().get()
         self.lbl = {}
+        self.btnSize = (110, 25)
+        self.mod_list = {}
+
+        for mod in ModuleFactory.get_module_list():
+            self.mod_list[mod.module_name] = mod
 
         self.sizer = wx.BoxSizer(wx.VERTICAL)
         self.basicPanel = wx.Panel(self, size=self.GetSize())
@@ -59,9 +64,11 @@ class App(wx.Frame):
         stopAllBtn.Bind(wx.EVT_BUTTON, self.BatchHandlerServices)
 
         runSizer = wx.StaticBoxSizer(self.runBox, wx.HORIZONTAL)
-        runSizer.Add(self.modSizer, 0, wx.LEFT | wx.RIGHT, 5)
-        runSizer.Add(startAllBtn, 0, wx.ALL, 10)
-        runSizer.Add(stopAllBtn, 0, wx.ALL, 10)
+        runSizer.AddMany([
+            (self.modSizer, 0, wx.LEFT | wx.RIGHT, 5),
+            (startAllBtn, 0, wx.ALL, 10),
+            (stopAllBtn, 0, wx.ALL, 10)
+        ])
 
         self.CreateOften()
         topSizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -78,14 +85,22 @@ class App(wx.Frame):
 
         self.advtTab = wx.Notebook(self.advtPanel)
         self.advtSizer.Add(self.advtTab, -1, wx.EXPAND | wx.RIGHT, 5)
-        for mod in ModuleFactory.get_module_list():
+        for mod_name, mod in self.mod_list.items():
             mod.set_advt_frame(self.advtTab)
 
         self.advtBox = wx.StaticBox(self.advtPanel, -1, Lang().get('often_label'))
         self.advtOftenSizer = wx.StaticBoxSizer(self.advtBox, wx.VERTICAL)
-        basicBtn = wx.Button(self.advtPanel, -1, Lang().get('basic_setting'), size=(110, 25), name='basic')
+
+        basicBtn = wx.Button(self.advtPanel, -1, Lang().get('basic_setting'), size=self.btnSize, name='basic')
         basicBtn.Bind(wx.EVT_BUTTON, self.Toggle)
-        self.advtOftenSizer.Add(basicBtn, 1, wx.EXPAND | wx.ALL, 5)
+
+        cmdBtn = wx.Button(self.advtPanel, -1, Lang().get('open_cmd'), size=self.btnSize)
+        cmdBtn.Bind(wx.EVT_BUTTON, self.OpenCmd)
+
+        self.advtOftenSizer.AddMany([
+            (basicBtn, 1, wx.EXPAND | wx.ALL, 5),
+            (cmdBtn, 1, wx.EXPAND | wx.ALL, 5)
+        ])
         self.advtSizer.Add(self.advtOftenSizer, 0, wx.RIGHT, 5)
 
     def CreateOften(self):
@@ -96,10 +111,8 @@ class App(wx.Frame):
                      ('addto_startup', set_autorun),
                      ('advt_setting', self.Toggle))
 
-        oftenBtnSize = (110, 25)
-
         for label, handler in oftenData:
-            oftenBtn = wx.Button(self.basicPanel, -1, Lang().get(label), size=oftenBtnSize, name=label)
+            oftenBtn = wx.Button(self.basicPanel, -1, Lang().get(label), size=self.btnSize, name=label)
             oftenBtn.Bind(wx.EVT_BUTTON, handler)
             self.oftenSizer.Add(oftenBtn, 0, wx.ALL, 5)
 
@@ -141,7 +154,7 @@ class App(wx.Frame):
     def UpdateState(self):
         """自动更新各模块的状态显示"""
         for module_name, mod_data in BaseModule.list_module_data().items():
-            mod = ModuleFactory.factory(module_name)
+            mod = self.mod_list[module_name]
             if mod.is_install():
                 self.lbl[module_name].SetLabel(mod.get_state().lower())
             else:
@@ -161,7 +174,7 @@ class App(wx.Frame):
         """批量处理各模块启动或停止服务"""
         for module_name, state in Cache().get("autorun").items():
             if state:
-                mod = ModuleFactory.factory(module_name)
+                mod = self.mod_list[module_name]
                 if event.GetEventObject().GetName() == "start":
                     wx.CallAfter(mod.start_service)
                 else:
@@ -177,6 +190,11 @@ class App(wx.Frame):
         else:
             self.basicPanel.Hide()
             self.advtPanel.Show()
+
+    def OpenCmd(self, event):
+        tabName = self.advtTab.GetPageText(self.advtTab.GetSelection())
+        open_cmd(self.mod_list[tabName].path)
+
 
 app = wx.App()
 frame = App()

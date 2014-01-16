@@ -7,6 +7,8 @@
     "service_delay" : 10,
     "service_wait_time" : 0.5,
 
+    "default_editor" : "",
+
     "module" : {
         "apache2.2.17" : {
             "service_name" : "PPapache",
@@ -30,8 +32,9 @@
             "service_name" : "PPmemcached",
             "group" : "memcached",
             "path" : "bin\\memcached\\memcached1.2.6",
-            "install" : "sc create \"PPmemcached\" start= auto binPath= \"%sbin\\memcached\\memcached1.2.6\\memcached.exe -d runservice -m 32 -p 22122\" DisplayName= \"PPmemcached\"",
-            "uninstall" : "sc delete \"PPmemcached\""
+            "install" : "sc create \"PPmemcached\" start= auto binPath= \"%sbin\\memcached\\memcached1.2.6\\memcached.exe -d runservice -m 32 -p 11211\" DisplayName= \"PPmemcached\"",
+            "uninstall" : "sc delete \"PPmemcached\"",
+            "port" : "11211"
         }
     },
     "logging" : {

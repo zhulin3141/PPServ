@@ -4,6 +4,7 @@
 import wx
 from lang import *
 from common import *
+from module.module_factory import *
 
 class TaskBarIcon(wx.TaskBarIcon):
     ID_MainPage = wx.NewId()
@@ -29,7 +30,12 @@ class TaskBarIcon(wx.TaskBarIcon):
         self.frame.Raise()
 
     def OnAbout(self, event):
-        wx.MessageBox(APPNAME, Lang().get('about_title'))
+        aboutStr = '%s %s\n\n' % (APPNAME, VERSION)
+        for mod in ModuleFactory.get_module_list():
+            aboutStr += mod.module_name + '\n'
+
+        aboutStr += "\n %s: %s" % (Lang().get('author'), AUTHOR)
+        wx.MessageBox(aboutStr, Lang().get('about_title'))
 
     def OnMinshow(self, event):
         self.frame.OnHide(event)

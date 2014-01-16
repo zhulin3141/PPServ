@@ -5,17 +5,27 @@ from common import *
 from base_module import BaseModule
 import wx
 import ConfigParser
+from lang import Lang
 
 class Mod_Php(BaseModule):
     '''PHP模块类'''
     def __init__(self, name):
         BaseModule.__init__(self, name)
-        self.setting_sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.conf_file = BASE_DIR + self.path + "\php.ini"
         self.parse_config_file()
 
+        self.cfg_ctr = {}
+
     def parse_config_file(self):
         self.content = open(self.conf_file,'r').read()
+        self.cfg = ConfigParser.SafeConfigParser()
+
+        self.cfg.read(self.conf_file)
+        all_items = [item[0] for item in self.cfg.items('PHP')]
+        options = ['short_open_tag', 'asp_tags', 'max_execution_time', 'memory_limit', 'error_reporting', 'display_errors']
+
+        #只获取有值的项，即没有；注释的项
+        self.exists_options = list(set(all_items).intersection(set(options)))
 
     def set_advt_frame(self, parent):
         self.setting_panel = wx.Panel(parent)
@@ -23,22 +33,29 @@ class Mod_Php(BaseModule):
         parent.AddPage(self.setting_panel, self.module_name)
 
         self.set_load_module()
-
-        cfg = ConfigParser.SafeConfigParser()
-        cfg.read(self.conf_file)
-        all_items = [item[0] for item in cfg.items('PHP')]
-        options = ['short_open_tag', 'asp_tags', 'max_execution_time', 'memory_limit', 'error_reporting', 'display_errors']
-
-        #只获取有值的项，即没有；注释的项
-        exists_options = list(set(all_items).intersection(set(options)))
+        self.opt_sizer = wx.BoxSizer(wx.VERTICAL)
         self.grid_sizer = wx.FlexGridSizer(rows=15, cols=2)
-        for opt in exists_options:
+        for opt in self.exists_options:
             lbl = wx.StaticText(self.setting_panel, -1, opt)
-            txt = wx.TextCtrl(self.setting_panel, -1, cfg.get('PHP', opt))
+            self.cfg_ctr[opt] = txt = wx.TextCtrl(self.setting_panel, -1, self.cfg.get('PHP', opt))
             self.grid_sizer.Add(lbl, 0, wx.ALL, 5)
             self.grid_sizer.Add(txt, 0, wx.ALL, 3)
 
-        self.setting_sizer.Add(self.grid_sizer, 0, wx.ALL, 5)
+        conf_btn = wx.Button(self.setting_panel, -1, Lang().get('php_config_file'))
+        conf_btn.Bind(wx.EVT_BUTTON, self.open_config_file)
+
+        save_btn = wx.Button(self.setting_panel, -1, Lang().get('php_save_config'))
+        save_btn.Bind(wx.EVT_BUTTON, self.save_config)
+
+        self.handler_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.handler_sizer.AddMany([
+            (conf_btn),
+            (save_btn)
+        ])
+
+        self.opt_sizer.Add(self.grid_sizer)
+        self.opt_sizer.Add(self.handler_sizer, 0, wx.TOP, 5)
+        self.setting_sizer.Add(self.opt_sizer, 0, wx.ALL, 5)
 
     def change_module_state(self, event):
         index = event.GetInt()
@@ -61,3 +78,17 @@ class Mod_Php(BaseModule):
             self.loadList.Check(i, isLoad)
 
         self.setting_sizer.Add(self.loadList, 0, wx.EXPAND)
+
+    def open_config_file(self, event):
+        open_file(self.conf_file)
+
+    def save_config(self, event):
+        #保存配置
+        for opt in self.exists_options:
+            print opt
+            self.cfg.set('PHP', opt, self.cfg_ctr[opt].GetValue())
+            fp = open(self.conf_file,'w')
+            self.cfg.write(fp)
+            fp.close()
+
+        self.parse_config_file()

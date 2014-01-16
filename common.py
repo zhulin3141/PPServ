@@ -13,6 +13,7 @@ import collections
 
 VERSION = '1.1'
 APPNAME = 'PPServ'
+AUTHOR = 'zhulin3141@gmail.com'
 BASE_DIR = os.getcwd() + '\\'
 
 #运行状态
@@ -56,7 +57,7 @@ def load_json(file_path):
 def open_hosts(event):
     '''打开hosts文件'''
     hostfile = os.environ['SYSTEMROOT'] + '\system32\drivers\etc\hosts'
-    os.system('notepad %s' % hostfile)
+    open_file(hostfile)
 
 def set_autorun(event):
     '''设置为开机启动'''
@@ -91,3 +92,10 @@ def execute(cmd):
     for line in p.stdout.readlines():
         result += line.decode(conf.Conf().get('encoding'))
     return result
+
+def open_cmd(path='', cmd=''):
+    """在指定的目录下打开cmd"""
+    os.system('start /D "%s" %s' % (BASE_DIR + path, cmd))
+
+def open_file(file):
+    os.system('notepad %s' % file)
