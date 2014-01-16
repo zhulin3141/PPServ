@@ -23,7 +23,19 @@
     //php
     "php_save_config" : "保存",
 
+    //memcache
+    "mem_save_config" : "保存",
+    "mem_param_p" : "监听的端口",
+    "mem_param_l" : "连接的IP地址",
+    "mem_param_u" : "运行身份",
+    "mem_param_m" : "最大内存",
+    "mem_param_M" : "内存耗尽时返回错误",
+    "mem_param_c" : "最大同时连接数",
+    "mem_param_f" : "块大小增长因子",
+    "mem_param_n" : "最小分配空间",
+
     "not_install_service" : "服务 %s 没有安装",
+    "error_install_data" : "未正确安装%s",
     "module_load_error" : "模块数据加载错误，不存在文件或无效的配置",
     "load_config_error" : "配置文件加载错误",
     "is_already_running" : "请求的服务已经启动",
