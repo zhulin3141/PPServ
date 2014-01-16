@@ -95,4 +95,4 @@ class Mod_Memcached(BaseModule):
         self.setting_sizer.Add(self.opt_sizer, 0, wx.ALL, 5)
 
     def open_console(self, event):
-        os.system('start /D "%s"' % (BASE_DIR + self.path))
+        open_cmd(self.path)

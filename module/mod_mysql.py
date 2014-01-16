@@ -46,4 +46,4 @@ class Mod_Mysql(BaseModule):
         os.system('notepad %s' % self.conf_file)
 
     def open_console(self, event):
-        os.system('start /D "%s" mysql -u root -p' % (BASE_DIR + self.path + '\\bin'))
+        open_cmd(self.path + '\\bin', 'mysql -u root -p')

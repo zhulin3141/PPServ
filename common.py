@@ -92,6 +92,6 @@ def execute(cmd):
         result += line.decode(conf.Conf().get('encoding'))
     return result
 
-def open_cmd(path=''):
+def open_cmd(path='', cmd=''):
     """在指定的目录下打开cmd"""
-    os.system('start /D "%s"' % (BASE_DIR + path))
+    os.system('start /D "%s" %s' % (BASE_DIR + path, cmd))
