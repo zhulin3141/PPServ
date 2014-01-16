@@ -31,6 +31,10 @@ class App(wx.Frame):
         self.data = Cache().get()
         self.lbl = {}
         self.btnSize = (110, 25)
+        self.mod_list = {}
+
+        for mod in ModuleFactory.get_module_list():
+            self.mod_list[mod.module_name] = mod
 
         self.sizer = wx.BoxSizer(wx.VERTICAL)
         self.basicPanel = wx.Panel(self, size=self.GetSize())
@@ -81,7 +85,7 @@ class App(wx.Frame):
 
         self.advtTab = wx.Notebook(self.advtPanel)
         self.advtSizer.Add(self.advtTab, -1, wx.EXPAND | wx.RIGHT, 5)
-        for mod in ModuleFactory.get_module_list():
+        for mod_name, mod in self.mod_list.items():
             mod.set_advt_frame(self.advtTab)
 
         self.advtBox = wx.StaticBox(self.advtPanel, -1, Lang().get('often_label'))
@@ -150,7 +154,7 @@ class App(wx.Frame):
     def UpdateState(self):
         """自动更新各模块的状态显示"""
         for module_name, mod_data in BaseModule.list_module_data().items():
-            mod = ModuleFactory.factory(module_name)
+            mod = self.mod_list[module_name]
             if mod.is_install():
                 self.lbl[module_name].SetLabel(mod.get_state().lower())
             else:
@@ -170,7 +174,7 @@ class App(wx.Frame):
         """批量处理各模块启动或停止服务"""
         for module_name, state in Cache().get("autorun").items():
             if state:
-                mod = ModuleFactory.factory(module_name)
+                mod = self.mod_list[module_name]
                 if event.GetEventObject().GetName() == "start":
                     wx.CallAfter(mod.start_service)
                 else:
@@ -189,8 +193,7 @@ class App(wx.Frame):
 
     def OpenCmd(self, event):
         tabName = self.advtTab.GetPageText(self.advtTab.GetSelection())
-        mod = ModuleFactory.factory(tabName)
-        open_cmd(mod.path)
+        open_cmd(self.mod_list[tabName].path)
 
 
 app = wx.App()
