@@ -11,6 +11,7 @@
     "addto_startup":"设置为开机启动",
     "basic_setting":"基本设置",
     "advt_setting":"高级设置",
+    "open_cmd" : "在当前目录打开CMD",
 
     //apache
     "apache_port" : "端口",

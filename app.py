@@ -85,7 +85,12 @@ class App(wx.Frame):
         self.advtOftenSizer = wx.StaticBoxSizer(self.advtBox, wx.VERTICAL)
         basicBtn = wx.Button(self.advtPanel, -1, Lang().get('basic_setting'), size=(110, 25), name='basic')
         basicBtn.Bind(wx.EVT_BUTTON, self.Toggle)
+
+        cmdBtn = wx.Button(self.advtPanel, -1, Lang().get('open_cmd'), size=(110, 25))
+        cmdBtn.Bind(wx.EVT_BUTTON, self.OpenCmd)
+
         self.advtOftenSizer.Add(basicBtn, 1, wx.EXPAND | wx.ALL, 5)
+        self.advtOftenSizer.Add(cmdBtn, 1, wx.EXPAND | wx.ALL, 5)
         self.advtSizer.Add(self.advtOftenSizer, 0, wx.RIGHT, 5)
 
     def CreateOften(self):
@@ -177,6 +182,12 @@ class App(wx.Frame):
         else:
             self.basicPanel.Hide()
             self.advtPanel.Show()
+
+    def OpenCmd(self, event):
+        tabName = self.advtTab.GetPageText(self.advtTab.GetSelection())
+        mod = ModuleFactory.factory(tabName)
+        open_cmd(mod.path)
+
 
 app = wx.App()
 frame = App()
