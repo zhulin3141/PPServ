@@ -30,6 +30,7 @@ class App(wx.Frame):
     def InitUi(self):
         self.data = Cache().get()
         self.lbl = {}
+        self.btnSize = (110, 25)
 
         self.sizer = wx.BoxSizer(wx.VERTICAL)
         self.basicPanel = wx.Panel(self, size=self.GetSize())
@@ -59,9 +60,11 @@ class App(wx.Frame):
         stopAllBtn.Bind(wx.EVT_BUTTON, self.BatchHandlerServices)
 
         runSizer = wx.StaticBoxSizer(self.runBox, wx.HORIZONTAL)
-        runSizer.Add(self.modSizer, 0, wx.LEFT | wx.RIGHT, 5)
-        runSizer.Add(startAllBtn, 0, wx.ALL, 10)
-        runSizer.Add(stopAllBtn, 0, wx.ALL, 10)
+        runSizer.AddMany([
+            (self.modSizer, 0, wx.LEFT | wx.RIGHT, 5),
+            (startAllBtn, 0, wx.ALL, 10),
+            (stopAllBtn, 0, wx.ALL, 10)
+        ])
 
         self.CreateOften()
         topSizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -83,14 +86,17 @@ class App(wx.Frame):
 
         self.advtBox = wx.StaticBox(self.advtPanel, -1, Lang().get('often_label'))
         self.advtOftenSizer = wx.StaticBoxSizer(self.advtBox, wx.VERTICAL)
-        basicBtn = wx.Button(self.advtPanel, -1, Lang().get('basic_setting'), size=(110, 25), name='basic')
+
+        basicBtn = wx.Button(self.advtPanel, -1, Lang().get('basic_setting'), size=self.btnSize, name='basic')
         basicBtn.Bind(wx.EVT_BUTTON, self.Toggle)
 
-        cmdBtn = wx.Button(self.advtPanel, -1, Lang().get('open_cmd'), size=(110, 25))
+        cmdBtn = wx.Button(self.advtPanel, -1, Lang().get('open_cmd'), size=self.btnSize)
         cmdBtn.Bind(wx.EVT_BUTTON, self.OpenCmd)
 
-        self.advtOftenSizer.Add(basicBtn, 1, wx.EXPAND | wx.ALL, 5)
-        self.advtOftenSizer.Add(cmdBtn, 1, wx.EXPAND | wx.ALL, 5)
+        self.advtOftenSizer.AddMany([
+            (basicBtn, 1, wx.EXPAND | wx.ALL, 5),
+            (cmdBtn, 1, wx.EXPAND | wx.ALL, 5)
+        ])
         self.advtSizer.Add(self.advtOftenSizer, 0, wx.RIGHT, 5)
 
     def CreateOften(self):
@@ -101,10 +107,8 @@ class App(wx.Frame):
                      ('addto_startup', set_autorun),
                      ('advt_setting', self.Toggle))
 
-        oftenBtnSize = (110, 25)
-
         for label, handler in oftenData:
-            oftenBtn = wx.Button(self.basicPanel, -1, Lang().get(label), size=oftenBtnSize, name=label)
+            oftenBtn = wx.Button(self.basicPanel, -1, Lang().get(label), size=self.btnSize, name=label)
             oftenBtn.Bind(wx.EVT_BUTTON, handler)
             self.oftenSizer.Add(oftenBtn, 0, wx.ALL, 5)
 
