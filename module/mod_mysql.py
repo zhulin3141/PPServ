@@ -14,7 +14,18 @@ class Mod_Mysql(BaseModule):
         self.parse_config_file()
 
     def parse_config_file(self):
-        pass
+        self.content = open(self.conf_file,'r').read()
+
+        self.cfg = {
+            'listen_ports' : '(?<=\[client\]\n)(?:(?:.*\n){0,5}^port\s*=\s*)(\d+)',
+            'max_connections' : '(?<=\[mysqld\]\n)(?:(?:.*\n)*^max_connections\s*=\s*)(\d+)',
+            'max_allowed_packet' : '(?<=\[mysqld\]\n)(?:(?:.*\n)*^max_allowed_packet\s*=\s*)(\d+.*)',
+            'default_table_type' : '(?<=\[mysqld\]\n)(?:(?:.*\n)*^default_table_type\s*=\s*)(.*)',
+            'log_error' : '(?<=\[mysqld\]\n)(?:(?:.*\n)*^log-error\s*=\s*)(.*)',
+            'datadir' : '(?<=\[mysqld\]\n)(?:(?:.*\n)*^datadir\s*=\s*)(.*)'
+        }
+        for cfg_name, re_exp in self.cfg.items():
+            setattr(self, cfg_name, re.findall(re_exp, self.content, re.M)[0])
 
     def set_advt_frame(self, parent):
         self.setting_panel = wx.Panel(parent)
