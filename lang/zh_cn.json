@@ -16,6 +16,7 @@
 
     //通用界面文字
     "open_log_file" : "打开日志",
+    "save_config" : "保存",
 
     //apache
     "apache_port" : "端口",

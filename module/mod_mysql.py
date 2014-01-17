@@ -52,11 +52,15 @@ class Mod_Mysql(BaseModule):
         consoleBtn = wx.Button(self.setting_panel, -1, Lang().get('console'))
         consoleBtn.Bind(wx.EVT_BUTTON, self.open_console)
 
+        save_btn = wx.Button(self.setting_panel, -1, Lang().get('save_config'))
+        save_btn.Bind(wx.EVT_BUTTON, self.save_config)
+
         self.handler_sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.handler_sizer.AddMany([
             (log_btn),
             (conf_btn),
-            (consoleBtn)
+            (consoleBtn),
+            (save_btn)
         ])
 
         self.opt_sizer.Add(self.grid_sizer)
@@ -70,6 +74,10 @@ class Mod_Mysql(BaseModule):
 
     def open_config_file(self, event):
         open_file(self.conf_file)
+
+    def save_config(self, event):
+        #保存配置
+        pass
 
     def open_console(self, event):
         open_cmd(self.path + '\\bin', 'mysql -u root -p')
