@@ -14,6 +14,9 @@
     "advt_setting":"高级设置",
     "open_cmd" : "在当前目录打开CMD",
 
+    //通用界面文字
+    "open_log_file" : "打开日志",
+
     //apache
     "apache_port" : "端口",
     "apache_doc_root" : "根目录",
