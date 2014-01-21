@@ -108,6 +108,7 @@ class App(wx.Frame):
     def CreateOften(self):
         oftenBox = wx.StaticBox(self.basicPanel, -1, Lang().get('often_label'), name="often_box")
         self.oftenSizer = wx.StaticBoxSizer(oftenBox, wx.VERTICAL)
+        self.oftenBtnSizer = wx.FlexGridSizer(rows=5, cols=2)
 
         oftenData = (('edit_hosts', open_hosts),
                      ('addto_startup', set_autorun),
@@ -116,7 +117,8 @@ class App(wx.Frame):
         for label, handler in oftenData:
             oftenBtn = wx.Button(self.basicPanel, -1, Lang().get(label), size=self.btnSize, name=label)
             oftenBtn.Bind(wx.EVT_BUTTON, handler)
-            self.oftenSizer.Add(oftenBtn, 0, wx.ALL, 5)
+            self.oftenBtnSizer.Add(oftenBtn, 0, wx.ALL, 5)
+        self.oftenSizer.Add(self.oftenBtnSizer)
 
     def CreateModuleList(self):
         self.modSizer = wx.FlexGridSizer(rows=5, cols=2)
