@@ -45,6 +45,14 @@ class BaseModule(object):
     def list_module_data():
         return load_json('conf/conf.json')['module']
 
+    @staticmethod
+    def list_service_module():
+        service_list = []
+        for mod_name, mod in load_json('conf/conf.json')['module'].items():
+            if 'service_name' in mod:
+                service_list.append(mod_name)
+        return service_list
+
     def install_service(self):
         '''安装模块的服务
 

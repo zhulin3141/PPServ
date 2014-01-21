@@ -120,7 +120,7 @@ class App(wx.Frame):
 
     def CreateModuleList(self):
         self.modSizer = wx.FlexGridSizer(rows=5, cols=2)
-        for module_name, mod in BaseModule.list_module_data().items():
+        for module_name in BaseModule.list_service_module():
             run = wx.CheckBox(self.basicPanel, -1, module_name, size=[120, 13])
             run.SetValue(run.Label in self.data['autorun'] and self.data['autorun'][run.Label])
             run.Bind(wx.EVT_CHECKBOX, self.SaveSelect)
@@ -155,7 +155,7 @@ class App(wx.Frame):
 
     def UpdateState(self):
         """自动更新各模块的状态显示"""
-        for module_name, mod_data in BaseModule.list_module_data().items():
+        for module_name in BaseModule.list_service_module():
             mod = self.mod_list[module_name]
             if mod.is_install():
                 self.lbl[module_name].SetLabel(mod.get_state().lower())
