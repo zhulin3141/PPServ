@@ -15,7 +15,7 @@ class TaskBarIcon(wx.TaskBarIcon):
     def __init__(self, frame):
         wx.TaskBarIcon.__init__(self)
         self.frame = frame
-        self.SetIcon(wx.Icon(name='icon.ico', type=wx.BITMAP_TYPE_ICO), APPNAME)
+        self.SetTaskBarIcon()
         self.Bind(wx.EVT_TASKBAR_LEFT_DCLICK, self.OnTaskBarLeftDClick)
         self.Bind(wx.EVT_MENU, open_main_page, id=self.ID_MainPage)
         self.Bind(wx.EVT_MENU, self.OnAbout, id=self.ID_About)
@@ -50,3 +50,7 @@ class TaskBarIcon(wx.TaskBarIcon):
         menu.Append(self.ID_About, Lang().get('menu_about'))
         menu.Append(self.ID_Closeshow, Lang().get('menu_quit'))
         return menu
+
+    def SetTaskBarIcon(self, size=(32, 32)):
+        icon = wx.Icon(name='icon.ico', type=wx.BITMAP_TYPE_ICO, desiredWidth=size[0], desiredHeight=size[1])
+        self.SetIcon(icon, APPNAME)
