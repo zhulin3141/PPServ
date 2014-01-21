@@ -61,7 +61,7 @@ class Mod_Mysql(BaseModule):
         parent.AddPage(self.setting_panel, self.module_name)
 
     def open_log_file(self, event):
-        open_file(self.log_error)
+        open_file(self.cfg['mysqld']['log-error'])
 
     def open_config_file(self, event):
         open_file(self.conf_file)
