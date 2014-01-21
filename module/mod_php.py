@@ -4,7 +4,7 @@
 from common import *
 from base_module import BaseModule
 import wx
-import ConfigParser
+from configobj import ConfigObj
 from lang import Lang
 
 class Mod_Php(BaseModule):
@@ -18,10 +18,9 @@ class Mod_Php(BaseModule):
 
     def parse_config_file(self):
         self.content = open(self.conf_file,'r').read()
-        self.cfg = ConfigParser.SafeConfigParser()
+        self.cfg = ConfigObj(self.conf_file, use_quotation_marks=False, allow_multi_key=['extension'], comment_idf=';')
 
-        self.cfg.read(self.conf_file)
-        all_items = [item[0] for item in self.cfg.items('PHP')]
+        all_items = self.cfg['PHP'].keys()
         options = ['short_open_tag', 'asp_tags', 'max_execution_time', 'memory_limit', 'error_reporting', 'display_errors']
 
         #只获取有值的项，即没有；注释的项
@@ -37,7 +36,7 @@ class Mod_Php(BaseModule):
         self.grid_sizer = wx.FlexGridSizer(rows=15, cols=2)
         for opt in self.exists_options:
             lbl = wx.StaticText(self.setting_panel, -1, opt)
-            self.cfg_ctr[opt] = txt = wx.TextCtrl(self.setting_panel, -1, self.cfg.get('PHP', opt))
+            self.cfg_ctr[opt] = txt = wx.TextCtrl(self.setting_panel, -1, self.cfg['PHP'][opt])
             self.grid_sizer.Add(lbl, 0, wx.ALL, 5)
             self.grid_sizer.Add(txt, 0, wx.ALL, 3)
 
@@ -85,10 +84,7 @@ class Mod_Php(BaseModule):
     def save_config(self, event):
         #保存配置
         for opt in self.exists_options:
-            print opt
-            self.cfg.set('PHP', opt, self.cfg_ctr[opt].GetValue())
-            fp = open(self.conf_file,'w')
-            self.cfg.write(fp)
-            fp.close()
+            self.cfg['PHP'][opt] = self.cfg_ctr[opt].GetValue()
+            self.cfg.write()
 
         self.parse_config_file()

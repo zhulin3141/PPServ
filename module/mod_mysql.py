@@ -5,6 +5,7 @@ from common import *
 from base_module import BaseModule
 from lang import *
 import wx
+from configobj import ConfigObj
 
 class Mod_Mysql(BaseModule):
     '''Mysql模块类'''
@@ -18,16 +19,7 @@ class Mod_Mysql(BaseModule):
     def parse_config_file(self):
         self.content = open(self.conf_file,'r').read()
 
-        self.cfg = {
-            'listen_ports' : '(?<=\[client\]\n)(?:(?:.*\n){0,5}^port\s*=\s*)(\d+)',
-            'max_connections' : '(?<=\[mysqld\]\n)(?:(?:.*\n)*^max_connections\s*=\s*)(\d+)',
-            'max_allowed_packet' : '(?<=\[mysqld\]\n)(?:(?:.*\n)*^max_allowed_packet\s*=\s*)(\d+.*)',
-            'default_table_type' : '(?<=\[mysqld\]\n)(?:(?:.*\n)*^default_table_type\s*=\s*)(.*)',
-            'log_error' : '(?<=\[mysqld\]\n)(?:(?:.*\n)*^log-error\s*=\s*)(.*)',
-            'datadir' : '(?<=\[mysqld\]\n)(?:(?:.*\n)*^datadir\s*=\s*)(.*)'
-        }
-        for cfg_name, re_exp in self.cfg.items():
-            setattr(self, cfg_name, re.findall(re_exp, self.content, re.M)[0])
+        self.cfg = ConfigObj(self.conf_file)
 
     def set_advt_frame(self, parent):
         self.setting_panel = wx.Panel(parent)
@@ -36,12 +28,11 @@ class Mod_Mysql(BaseModule):
         self.opt_sizer = wx.BoxSizer(wx.VERTICAL)
         self.grid_sizer = wx.FlexGridSizer(rows=15, cols=4)
 
-        for cfg_name in self.cfg:
-            if cfg_name not in ['log_error', 'datadir']:
-                lbl = wx.StaticText(self.setting_panel, -1, cfg_name)
-                self.cfg_ctr[cfg_name] = txt = wx.TextCtrl(self.setting_panel, -1, getattr(self, cfg_name), size=(200, 20))
-                self.grid_sizer.Add(lbl, 0, wx.ALL, 5)
-                self.grid_sizer.Add(txt, 0, wx.ALL, 3)
+        for cfg_name in self.cfg['mysqld'].keys():
+            lbl = wx.StaticText(self.setting_panel, -1, cfg_name)
+            self.cfg_ctr[cfg_name] = txt = wx.TextCtrl(self.setting_panel, -1, self.cfg['mysqld'][cfg_name], size=(200, 20))
+            self.grid_sizer.Add(lbl, 0, wx.ALL, 5)
+            self.grid_sizer.Add(txt, 0, wx.ALL, 3)
 
         log_btn = wx.Button(self.setting_panel, -1, Lang().get('open_log_file'))
         log_btn.Bind(wx.EVT_BUTTON, self.open_log_file)
@@ -77,7 +68,9 @@ class Mod_Mysql(BaseModule):
 
     def save_config(self, event):
         #保存配置
-        pass
+        for cfg_name, ctr in self.cfg_ctr.items():
+            self.cfg['mysqld'][cfg_name] = ctr.GetValue()
+        self.cfg.write()
 
     def open_console(self, event):
         open_cmd(self.path + '\\bin', 'mysql -u root -p')
