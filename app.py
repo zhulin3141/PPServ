@@ -77,7 +77,9 @@ class App(wx.Frame):
         self.basicSizer.Add(topSizer)
 
         self.stateBox = wx.TextCtrl(self.basicPanel, -1, "", size=(600, 100), style=wx.TE_MULTILINE)
-        self.basicSizer.Add(self.stateBox, 0, wx.EXPAND | wx.TOP, 5)
+        self.bottomSizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.bottomSizer.Add(self.stateBox, 1, wx.ALL | wx.EXPAND, 5)
+        self.basicSizer.Add(self.stateBox, 1, wx.EXPAND | wx.TOP, 5)
 
     def InitAdvtPanel(self):
         self.advtSizer = wx.BoxSizer(wx.HORIZONTAL)
