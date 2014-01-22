@@ -1,13 +1,6 @@
 {
-    //应用名称
-    "app_name" : "PPServ",
     "lang" : "zh_cn",
     "encoding" : "gbk",
-    //启动服务延迟时间
-    "service_delay" : 10,
-    "service_wait_time" : 0.5,
-
-    "default_editor" : "notepad",
 
     "module" : {
         "apache2.2.17" : {

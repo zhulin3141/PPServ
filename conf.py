@@ -5,12 +5,13 @@ from common import *
 from lang import *
 import _winreg
 
-DEFAULT_CONFIG = 'conf/conf.json'
+DEFAULT_CONFIG = 'conf/default.json'
+USER_CONFIG = 'conf/conf.json'
 
 @singleton
 class Conf():
     data = {}
-    conf_file = DEFAULT_CONFIG
+    conf_file = USER_CONFIG
 
     def __init__(self):
         try:
@@ -24,7 +25,8 @@ class Conf():
             _winreg.CloseKey(app_key)
 
         try:
-            self.data = load_json(self.conf_file)
+            self.data = load_json(DEFAULT_CONFIG)
+            self.data.update(load_json(self.conf_file))
         except:
             logger.debug(Lang().get('load_config_error'))
 
