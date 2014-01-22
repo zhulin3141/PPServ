@@ -35,7 +35,7 @@ class StateLabel(GenStaticText):
             self.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
             self.SetFont(self.underline_font)
         elif event.LeftUp():
-            mod = ModuleFactory.factory(self.name)
+            mod = ModuleFactory.factory(self.GetName())
             state = mod.get_state().upper()
             if state == RUNNING:
                 mod.stop_service()
