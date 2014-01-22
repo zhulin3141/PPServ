@@ -15,32 +15,32 @@ class TaskBarIcon(wx.TaskBarIcon):
     def __init__(self, frame):
         wx.TaskBarIcon.__init__(self)
         self.frame = frame
-        self.SetTaskBarIcon()
-        self.Bind(wx.EVT_TASKBAR_LEFT_DCLICK, self.OnTaskBarLeftDClick)
+        self.set_taskbar_icon()
+        self.Bind(wx.EVT_TASKBAR_LEFT_DCLICK, self.on_taskbar_left_dclick)
         self.Bind(wx.EVT_MENU, open_main_page, id=self.ID_MainPage)
-        self.Bind(wx.EVT_MENU, self.OnAbout, id=self.ID_About)
-        self.Bind(wx.EVT_MENU, self.OnMinshow, id=self.ID_Minshow)
-        self.Bind(wx.EVT_MENU, self.OnCloseshow, id=self.ID_Closeshow)
+        self.Bind(wx.EVT_MENU, self.on_about, id=self.ID_About)
+        self.Bind(wx.EVT_MENU, self.on_min_show, id=self.ID_Minshow)
+        self.Bind(wx.EVT_MENU, self.on_close_show, id=self.ID_Closeshow)
 
-    def OnTaskBarLeftDClick(self, event):
+    def on_taskbar_left_dclick(self, event):
         if self.frame.IsIconized():
            self.frame.Iconize(False)
         if not self.frame.IsShown():
            self.frame.Show(True)
         self.frame.Raise()
 
-    def OnAbout(self, event):
-        aboutStr = '%s %s\n\n' % (APPNAME, VERSION)
+    def on_about(self, event):
+        about_str = '%s %s\n\n' % (APPNAME, VERSION)
         for mod in ModuleFactory.get_module_list():
-            aboutStr += mod.module_name + '\n'
+            about_str += mod.module_name + '\n'
 
-        aboutStr += "\n %s: %s" % (Lang().get('author'), AUTHOR)
-        wx.MessageBox(aboutStr, Lang().get('about_title'))
+        about_str += "\n %s: %s" % (Lang().get('author'), AUTHOR)
+        wx.MessageBox(about_str, Lang().get('about_title'))
 
-    def OnMinshow(self, event):
+    def on_min_show(self, event):
         self.frame.OnHide(event)
 
-    def OnCloseshow(self, event):
+    def on_close_show(self, event):
         self.frame.OnClose(event)
 
     def CreatePopupMenu(self):
@@ -51,6 +51,6 @@ class TaskBarIcon(wx.TaskBarIcon):
         menu.Append(self.ID_Closeshow, Lang().get('menu_quit'))
         return menu
 
-    def SetTaskBarIcon(self, size=(32, 32)):
+    def set_taskbar_icon(self, size=(32, 32)):
         icon = wx.Icon(name='icon.ico', type=wx.BITMAP_TYPE_ICO, desiredWidth=size[0], desiredHeight=size[1])
         self.SetIcon(icon, APPNAME)

@@ -20,7 +20,7 @@ class BaseModule(object):
         path: 软件所在的目录
         install: 作为服务安装的命令
         uninstall: 卸载服务的命令
-        serviceManager: 服务管理
+        service_manager: 服务管理
         setting_panel: 设置panel
     '''
 
@@ -39,7 +39,7 @@ class BaseModule(object):
                 setattr(self, attr, val)
 
         if hasattr(self, 'service_name'):
-            self.serviceManager = ServiceManager(self.service_name)
+            self.service_manager = ServiceManager(self.service_name)
 
     @staticmethod
     def list_module_data():
@@ -83,7 +83,7 @@ class BaseModule(object):
             if self.get_state() == RUNNING:
                 msg = Lang().get('is_already_running')
             else:
-                msg = self.serviceManager.Start()
+                msg = self.service_manager.start()
             logging.info(msg)
 
     def stop_service(self):
@@ -92,13 +92,13 @@ class BaseModule(object):
             if self.get_state() == STOPPED:
                 msg = Lang().get('is_already_stopped') % self.service_name
             else:
-                msg = self.serviceManager.Stop()
+                msg = self.service_manager.stop()
             logging.info(msg)
 
     def is_install(self):
         '''检查服务是否已安装'''
         if hasattr(self, 'service_name'):
-            return self.serviceManager.IsExists()
+            return self.service_manager.is_exists()
         else:
             return True
 
@@ -108,7 +108,7 @@ class BaseModule(object):
         Returns: STOPPED,RUNNING,STARTING,STOPPING,UNKNOWN
         '''
         if hasattr(self, 'service_name'):
-            return self.serviceManager.Status()
+            return self.service_manager.status()
         else:
             return UNKNOWN
 

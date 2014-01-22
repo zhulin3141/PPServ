@@ -68,25 +68,25 @@ class Mod_Apache(BaseModule):
 
     def change_module_state(self, event):
         index = event.GetInt()
-        moduleName = self.moduleList[index]
-        if self.loadList.IsChecked(index):
+        module_name = self.module_list[index]
+        if self.load_list.IsChecked(index):
             #如果选中则替换掉#，即加载该模块
-            self.replace(self.conf_file, r'#+LoadModule ' + moduleName, 'LoadModule ' + moduleName)
+            self.replace(self.conf_file, r'#+LoadModule ' + module_name, 'LoadModule ' + module_name)
         else:
-            self.replace(self.conf_file, r'LoadModule ' + moduleName, '#LoadModule ' + moduleName)
+            self.replace(self.conf_file, r'LoadModule ' + module_name, '#LoadModule ' + module_name)
 
     def set_load_module(self):
-        loadModuleData = re.findall('(^#*)LoadModule (.+_module)', self.content, re.M)
-        self.moduleList = [modName for (isLoaded, modName) in loadModuleData]
-        self.moduleLoad = [isLoaded.strip() == '' for (isLoaded, modName) in loadModuleData]
+        load_module_data = re.findall('(^#*)LoadModule (.+_module)', self.content, re.M)
+        self.module_list = [mod_name for (is_loaded, mod_name) in load_module_data]
+        self.module_load = [is_loaded.strip() == '' for (is_loaded, mod_name) in load_module_data]
 
-        self.loadList = wx.CheckListBox(self.setting_panel, -1, choices=self.moduleList)
-        self.loadList.Bind(wx.EVT_CHECKLISTBOX, self.change_module_state)
+        self.load_list = wx.CheckListBox(self.setting_panel, -1, choices=self.module_list)
+        self.load_list.Bind(wx.EVT_CHECKLISTBOX, self.change_module_state)
 
-        for i, isLoad in enumerate(self.moduleLoad):
-            self.loadList.Check(i, isLoad)
+        for i, isLoad in enumerate(self.module_load):
+            self.load_list.Check(i, isLoad)
 
-        self.setting_sizer.Add(self.loadList, 0, wx.EXPAND)
+        self.setting_sizer.Add(self.load_list, 0, wx.EXPAND)
 
     def get_default_port(self):
         return self.listen_ports[0]

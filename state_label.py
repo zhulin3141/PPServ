@@ -14,28 +14,26 @@ class StateLabel(GenStaticText):
     """
 
     def __init__(self, parent, id=-1, label='', pos=(-1, -1),
-        size=(-1, -1), style=0, name='', mappingData=None):
+        size=(-1, -1), style=0, name=''):
 
         GenStaticText.__init__(self, parent, id, label, pos, size, style, name)
 
-        self.normalFont = wx.Font(9, wx.SWISS, wx.NORMAL, wx.BOLD, False, 'Verdana')
-        self.underLineFont = wx.Font(9, wx.SWISS, wx.NORMAL, wx.BOLD, True, 'Verdana')
+        self.normal_font = wx.Font(9, wx.SWISS, wx.NORMAL, wx.BOLD, False, 'Verdana')
+        self.underline_font = wx.Font(9, wx.SWISS, wx.NORMAL, wx.BOLD, True, 'Verdana')
 
-        self.SetFont(self.normalFont)
+        self.SetFont(self.normal_font)
         self.SetForegroundColour('red')
         self.SetBackgroundColour('white')
 
-        self.module = mappingData
+        self.Bind(wx.EVT_MOUSE_EVENTS, self.on_mouse_event)
+        self.Bind(wx.EVT_MOTION, self.on_mouse_event)
 
-        self.Bind(wx.EVT_MOUSE_EVENTS, self.OnMouseEvent)
-        self.Bind(wx.EVT_MOTION, self.OnMouseEvent)
-
-    def OnMouseEvent(self, event):
+    def on_mouse_event(self, event):
         if event.Moving():
             self.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
-            self.SetFont(self.underLineFont)
+            self.SetFont(self.underline_font)
         elif event.LeftUp():
-            mod = ModuleFactory.factory(self.module)
+            mod = ModuleFactory.factory(self.name)
             state = mod.get_state().upper()
             if state == RUNNING:
                 mod.stop_service()
@@ -43,16 +41,16 @@ class StateLabel(GenStaticText):
                 mod.start_service()
         else:
             self.SetCursor(wx.NullCursor)
-            self.SetFont(self.normalFont)
+            self.SetFont(self.normal_font)
         event.Skip()
 
-    def SetLabel(self, label):
+    def set_label(self, label):
         super(StateLabel, self).SetLabel(label)
         label = label.upper()
-        stateConfig = Conf().get('state_style')[label]
+        state_config = Conf().get('state_style')[label]
 
         if label in [RUNNING,STOPPED,UNKNOWN]:
-            if 'background' in stateConfig:
-                self.SetBackgroundColour(stateConfig['background'])
-            if 'foreground' in stateConfig:
-                self.SetForegroundColour(stateConfig['foreground'])
+            if 'background' in state_config:
+                self.SetBackgroundColour(state_config['background'])
+            if 'foreground' in state_config:
+                self.SetForegroundColour(state_config['foreground'])

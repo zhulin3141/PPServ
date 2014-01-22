@@ -77,15 +77,15 @@ class Mod_Memcached(BaseModule):
         for param_name, param_val in self.params_list:
             self.cfg_ctr[param_name].SetValue(param_val)
 
-        consoleBtn = wx.Button(self.setting_panel, -1, Lang().get('console'))
-        consoleBtn.Bind(wx.EVT_BUTTON, self.open_console)
+        console_btn = wx.Button(self.setting_panel, -1, Lang().get('console'))
+        console_btn.Bind(wx.EVT_BUTTON, self.open_console)
 
         save_btn = wx.Button(self.setting_panel, -1, Lang().get('mem_save_config'))
         save_btn.Bind(wx.EVT_BUTTON, self.save_config)
 
         self.handler_sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.handler_sizer.AddMany([
-            (consoleBtn),
+            (console_btn),
             (save_btn)
         ])
 

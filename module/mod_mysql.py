@@ -40,8 +40,8 @@ class Mod_Mysql(BaseModule):
         conf_btn = wx.Button(self.setting_panel, -1, Lang().get('mysql_config_file'))
         conf_btn.Bind(wx.EVT_BUTTON, self.open_config_file)
 
-        consoleBtn = wx.Button(self.setting_panel, -1, Lang().get('console'))
-        consoleBtn.Bind(wx.EVT_BUTTON, self.open_console)
+        console_btn = wx.Button(self.setting_panel, -1, Lang().get('console'))
+        console_btn.Bind(wx.EVT_BUTTON, self.open_console)
 
         save_btn = wx.Button(self.setting_panel, -1, Lang().get('save_config'))
         save_btn.Bind(wx.EVT_BUTTON, self.save_config)
@@ -50,7 +50,7 @@ class Mod_Mysql(BaseModule):
         self.handler_sizer.AddMany([
             (log_btn),
             (conf_btn),
-            (consoleBtn),
+            (console_btn),
             (save_btn)
         ])
 

@@ -58,25 +58,25 @@ class Mod_Php(BaseModule):
 
     def change_module_state(self, event):
         index = event.GetInt()
-        moduleName = self.moduleList[index]
+        module_name = self.module_list[index]
 
         if self.loadList.IsChecked(index):
-            self.replace(self.conf_file, r';+extension=' + moduleName, 'extension=' + moduleName)
+            self.replace(self.conf_file, r';+extension=' + module_name, 'extension=' + module_name)
         else:
-            self.replace(self.conf_file, r'extension=' + moduleName, ';extension=' + moduleName)
+            self.replace(self.conf_file, r'extension=' + module_name, ';extension=' + module_name)
 
     def set_load_module(self):
-        loadModuleData = re.findall('(^;*)extension=(php_.*).dll', self.content, re.M)
-        self.moduleList = [modName for (isLoaded, modName) in loadModuleData]
-        self.moduleLoad = [isLoaded.strip() == '' for (isLoaded, modName) in loadModuleData]
+        load_module_data = re.findall('(^;*)extension=(php_.*).dll', self.content, re.M)
+        self.module_list = [mod_name for (is_loaded, mod_name) in load_module_data]
+        self.module_load = [is_loaded.strip() == '' for (is_loaded, mod_name) in load_module_data]
 
-        self.loadList = wx.CheckListBox(self.setting_panel, -1, size=wx.DefaultSize, choices=self.moduleList)
-        self.loadList.Bind(wx.EVT_CHECKLISTBOX, self.change_module_state)
+        self.load_list = wx.CheckListBox(self.setting_panel, -1, size=wx.DefaultSize, choices=self.module_list)
+        self.load_list.Bind(wx.EVT_CHECKLISTBOX, self.change_module_state)
 
-        for i, isLoad in enumerate(self.moduleLoad):
-            self.loadList.Check(i, isLoad)
+        for i, isLoad in enumerate(self.module_load):
+            self.load_list.Check(i, isLoad)
 
-        self.setting_sizer.Add(self.loadList, 0, wx.EXPAND)
+        self.setting_sizer.Add(self.load_list, 0, wx.EXPAND)
 
     def open_config_file(self, event):
         open_file(self.conf_file)
