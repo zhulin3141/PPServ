@@ -1,0 +1,17 @@
+//默认配置，请不要直接修改
+{
+    //应用名称
+    "app_name" : "PPServ",
+
+    //启动服务延迟时间
+    "service_delay" : 10,
+    "service_wait_time" : 0.5,
+
+    "default_editor" : "notepad",
+    "state_style" : {
+        "DEFAULT" : {
+            "foreground" : "white",
+            "background" : "white"
+        }
+    }
+}
