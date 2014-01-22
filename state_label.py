@@ -18,8 +18,10 @@ class StateLabel(GenStaticText):
 
         GenStaticText.__init__(self, parent, id, label, pos, size, style, name)
 
-        self.normal_font = wx.Font(9, wx.SWISS, wx.NORMAL, wx.BOLD, False, 'Verdana')
-        self.underline_font = wx.Font(9, wx.SWISS, wx.NORMAL, wx.BOLD, True, 'Verdana')
+        self.state_config = Conf().get('state_style')
+        font = 'Verdana'
+        self.normal_font = wx.Font(9, wx.SWISS, wx.NORMAL, wx.BOLD, False, font)
+        self.underline_font = wx.Font(9, wx.SWISS, wx.NORMAL, wx.BOLD, True, font)
 
         self.SetFont(self.normal_font)
         self.SetForegroundColour('red')
@@ -47,10 +49,10 @@ class StateLabel(GenStaticText):
     def set_label(self, label):
         super(StateLabel, self).SetLabel(label)
         label = label.upper()
-        state_config = Conf().get('state_style')[label]
+        state_style = self.state_config[label]
 
         if label in [RUNNING,STOPPED,UNKNOWN]:
-            if 'background' in state_config:
-                self.SetBackgroundColour(state_config['background'])
-            if 'foreground' in state_config:
-                self.SetForegroundColour(state_config['foreground'])
+            if 'background' in state_style:
+                self.SetBackgroundColour(state_style['background'])
+            if 'foreground' in state_style:
+                self.SetForegroundColour(state_style['foreground'])
