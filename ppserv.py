@@ -32,6 +32,7 @@ class PPServ( ui.Ui ):
         for mod in ModuleFactory.get_module_list():
             self.mod_list[mod.module_name] = mod
         self._add_module_list()
+        self._add_advt_page()
     
     #窗口控制事件
     def OnHide(self, event):
@@ -92,6 +93,10 @@ class PPServ( ui.Ui ):
         sender = event.GetEventObject()
         self.data['autorun'][sender.Label] = sender.GetValue()
         Cache().set("autorun", self.data['autorun'])
+
+    def _add_advt_page(self):
+        for mod_name, mod in self.mod_list.items():
+            mod.set_advt_frame(self.advt_notebook)
 
 
 app = wx.App()
