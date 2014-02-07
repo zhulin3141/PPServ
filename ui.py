@@ -34,12 +34,12 @@ class Ui ( wx.Frame ):
         
         func_sizer = wx.BoxSizer( wx.HORIZONTAL )
         
-        module_list_sizer = wx.FlexGridSizer( 0, 2, 0, 0 )
-        module_list_sizer.SetFlexibleDirection( wx.BOTH )
-        module_list_sizer.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
+        self.module_list_sizer = wx.FlexGridSizer( 0, 2, 0, 0 )
+        self.module_list_sizer.SetFlexibleDirection( wx.BOTH )
+        self.module_list_sizer.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
         
         
-        func_sizer.Add( module_list_sizer, 1, wx.EXPAND, 5 )
+        func_sizer.Add( self.module_list_sizer, 1, wx.EXPAND, 5 )
         
         services_sizer = wx.BoxSizer( wx.HORIZONTAL )
         

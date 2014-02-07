@@ -6,6 +6,9 @@
 import wx
 import ui
 import task_bar_icon
+from cache import *
+from module.module_factory import *
+import state_label
 
 # Implementing Ui
 class PPServ( ui.Ui ):
@@ -20,6 +23,15 @@ class PPServ( ui.Ui ):
         self.SetBackgroundColour('white')
         self.Center()
         self.Show()
+
+        self.data = Cache().get()
+        self.lbl = {}
+        self.btn_size = (110, 25)
+        self.mod_list = {}
+
+        for mod in ModuleFactory.get_module_list():
+            self.mod_list[mod.module_name] = mod
+        self._add_module_list()
     
     #窗口控制事件
     def OnHide(self, event):
@@ -65,7 +77,23 @@ class PPServ( ui.Ui ):
         # TODO: Implement open_cmd_click
         pass
     
-    
+    def _add_module_list(self):
+        for module_name in BaseModule.list_service_module():
+            run = wx.CheckBox(self.basic_panel, -1, module_name, size=[120, 13])
+            run.SetValue(run.Label in self.data['autorun'] and self.data['autorun'][run.Label])
+            run.Bind(wx.EVT_CHECKBOX, self._save_select)
+
+            self.lbl[module_name] = state_label.StateLabel(self.basic_panel, -1, "stop", size=(50, 15), name=module_name)
+            self.module_list_sizer.Add(run, 0, wx.ALL, 5)
+            self.module_list_sizer.Add(self.lbl[module_name], 0, wx.ALL, 5)
+
+    def _save_select(self, event):
+        """保存选中的自动运行的程序的状态"""
+        sender = event.GetEventObject()
+        self.data['autorun'][sender.Label] = sender.GetValue()
+        Cache().set("autorun", self.data['autorun'])
+
+
 app = wx.App()
 frame = PPServ(None)
 app.MainLoop()
