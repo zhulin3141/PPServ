@@ -54,12 +54,12 @@ class PPServ( ui.Ui ):
         pass
     
     def advt_setting_click( self, event ):
-        # TODO: Implement advt_setting_click
-        pass
+        self.basic_panel.Hide()
+        self.advt_panel.Show()
     
     def basic_setting_click( self, event ):
-        # TODO: Implement basic_setting_click
-        pass
+        self.basic_panel.Show()
+        self.advt_panel.Hide()
     
     def open_cmd_click( self, event ):
         # TODO: Implement open_cmd_click
