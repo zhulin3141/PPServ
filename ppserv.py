@@ -8,6 +8,7 @@ import ui
 import task_bar_icon
 from cache import *
 from conf import *
+from common import *
 from module.module_factory import *
 from plugin_manager import DirectoryPluginManager
 import state_label
@@ -79,12 +80,10 @@ class PPServ( ui.Ui ):
                 wx.CallAfter(mod.stop_service)
     
     def edit_host_click( self, event ):
-        # TODO: Implement edit_host_click
-        pass
+        open_hosts(event)
     
     def auto_run_click( self, event ):
-        # TODO: Implement auto_run_click
-        pass
+        set_autorun(event)
     
     def advt_setting_click( self, event ):
         self.basic_panel.Hide()
@@ -95,8 +94,8 @@ class PPServ( ui.Ui ):
         self.advt_panel.Hide()
     
     def open_cmd_click( self, event ):
-        # TODO: Implement open_cmd_click
-        pass
+        tab_name = self.advt_notebook.GetPageText(self.advt_notebook.GetSelection())
+        open_cmd(self.mod_list[tab_name].path)
     
     def _add_module_list(self):
         for module_name in BaseModule.list_service_module():
