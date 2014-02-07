@@ -67,12 +67,16 @@ class PPServ( ui.Ui ):
 
     # Handlers for Ui events.
     def start_all_service_click( self, event ):
-        # TODO: Implement start_all_service_click
-        pass
+        for module_name, state in Cache().get("autorun").items():
+            if state:
+                mod = self.mod_list[module_name]
+                wx.CallAfter(mod.start_service)
     
     def stop_all_service_click( self, event ):
-        # TODO: Implement stop_all_service_click
-        pass
+        for module_name, state in Cache().get("autorun").items():
+            if state:
+                mod = self.mod_list[module_name]
+                wx.CallAfter(mod.stop_service)
     
     def edit_host_click( self, event ):
         # TODO: Implement edit_host_click
