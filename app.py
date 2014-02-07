@@ -12,6 +12,7 @@ from common import *
 from message_handler import *
 import state_label
 import task_bar_icon
+from plugin_manager import DirectoryPluginManager
 
 
 class App(wx.Frame):
@@ -154,6 +155,13 @@ class App(wx.Frame):
     def start(self):
         self.set_log()
         wx.CallAfter(self.update_state)
+
+        plugin_manager = DirectoryPluginManager()
+        plugin_manager.load_plugins()
+        plugins = plugin_manager.get_plugins()
+
+        for plugin in plugins:
+            plugin.start(None, {'advt_tab':self.advt_tab})
 
     def update_state(self):
         """自动更新各模块的状态显示"""
