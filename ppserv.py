@@ -27,7 +27,6 @@ class PPServ( ui.Ui ):
         self.Bind(wx.EVT_ICONIZE, self.OnIconfiy)
 
         self.SetBackgroundColour('white')
-        self.Center()
         self.Show()
 
         self.data = Cache().get()
@@ -88,6 +87,7 @@ class PPServ( ui.Ui ):
     def advt_setting_click( self, event ):
         self.basic_panel.Hide()
         self.advt_panel.Show()
+        self.advt_sizer.Fit( self.advt_panel )
     
     def basic_setting_click( self, event ):
         self.basic_panel.Show()

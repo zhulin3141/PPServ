@@ -99,11 +99,11 @@ class Ui ( wx.Frame ):
         self.advt_panel = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
         self.advt_panel.Hide()
         
-        advt_sizer = wx.BoxSizer( wx.HORIZONTAL )
+        self.advt_sizer = wx.BoxSizer( wx.HORIZONTAL )
         
         self.advt_notebook = wx.Notebook( self.advt_panel, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0 )
         
-        advt_sizer.Add( self.advt_notebook, 1, wx.EXPAND |wx.ALL, 5 )
+        self.advt_sizer.Add( self.advt_notebook, 1, wx.EXPAND |wx.ALL, 5 )
         
         advt_often_sizer = wx.StaticBoxSizer( wx.StaticBox( self.advt_panel, wx.ID_ANY, u"often" ), wx.VERTICAL )
         
@@ -114,12 +114,12 @@ class Ui ( wx.Frame ):
         advt_often_sizer.Add( self.open_cmd, 0, wx.ALL, 5 )
         
         
-        advt_sizer.Add( advt_often_sizer, 0, wx.ALL|wx.EXPAND|wx.RIGHT, 5 )
+        self.advt_sizer.Add( advt_often_sizer, 0, wx.ALL|wx.EXPAND|wx.RIGHT, 5 )
         
         
-        self.advt_panel.SetSizer( advt_sizer )
+        self.advt_panel.SetSizer( self.advt_sizer )
         self.advt_panel.Layout()
-        advt_sizer.Fit( self.advt_panel )
+        self.advt_sizer.Fit( self.advt_panel )
         hSizer.Add( self.advt_panel, 1, wx.EXPAND |wx.ALL, 5 )
         
         
