@@ -7,8 +7,12 @@ import wx
 import ui
 import task_bar_icon
 from cache import *
+from conf import *
 from module.module_factory import *
 import state_label
+import message_handler
+import logging
+import logging.config
 
 # Implementing Ui
 class PPServ( ui.Ui ):
@@ -33,6 +37,8 @@ class PPServ( ui.Ui ):
             self.mod_list[mod.module_name] = mod
         self._add_module_list()
         self._add_advt_page()
+
+        self._set_log()
     
     #窗口控制事件
     def OnHide(self, event):
@@ -97,6 +103,15 @@ class PPServ( ui.Ui ):
     def _add_advt_page(self):
         for mod_name, mod in self.mod_list.items():
             mod.set_advt_frame(self.advt_notebook)
+
+    def _set_log(self):
+        #从配置文件中设置log
+        logging.config.dictConfig(Conf().get('logging'))
+
+        handler = message_handler.MessageHandler(self.message_box)
+        log = logging.getLogger()
+        log.addHandler(handler)
+        log.setLevel(logging.INFO)
 
 
 app = wx.App()
