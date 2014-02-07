@@ -9,6 +9,7 @@ import task_bar_icon
 from cache import *
 from conf import *
 from module.module_factory import *
+from plugin_manager import DirectoryPluginManager
 import state_label
 import message_handler
 import logging
@@ -39,6 +40,15 @@ class PPServ( ui.Ui ):
         self._add_advt_page()
 
         self._set_log()
+
+        wx.CallAfter(self._update_state)
+
+        plugin_manager = DirectoryPluginManager()
+        plugin_manager.load_plugins()
+        plugins = plugin_manager.get_plugins()
+
+        for plugin in plugins:
+            plugin.start(self.advt_notebook)
     
     #窗口控制事件
     def OnHide(self, event):
@@ -112,6 +122,16 @@ class PPServ( ui.Ui ):
         log = logging.getLogger()
         log.addHandler(handler)
         log.setLevel(logging.INFO)
+
+    def _update_state(self):
+        """自动更新各模块的状态显示"""
+        for module_name in BaseModule.list_service_module():
+            mod = self.mod_list[module_name]
+            if mod.is_install():
+                self.lbl[module_name].set_label(mod.get_state().lower())
+            else:
+                mod.install_service()
+        wx.CallLater(3000, self._update_state)
 
 
 app = wx.App()
