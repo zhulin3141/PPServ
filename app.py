@@ -161,7 +161,7 @@ class App(wx.Frame):
         plugins = plugin_manager.get_plugins()
 
         for plugin in plugins:
-            plugin.start(None, {'advt_tab':self.advt_tab})
+            plugin.start(self.advt_tab)
 
     def update_state(self):
         """自动更新各模块的状态显示"""
