@@ -36,19 +36,12 @@ class PPServ( ui.Ui ):
 
         for mod in ModuleFactory.get_module_list():
             self.mod_list[mod.module_name] = mod
-        self._add_module_list()
-        self._add_advt_page()
+
+        self._dynamic_ui()
 
         self._set_log()
 
         wx.CallAfter(self._update_state)
-
-        plugin_manager = DirectoryPluginManager()
-        plugin_manager.load_plugins()
-        plugins = plugin_manager.get_plugins()
-
-        for plugin in plugins:
-            plugin.start(self.advt_notebook)
     
     #窗口控制事件
     def OnHide(self, event):
@@ -97,6 +90,31 @@ class PPServ( ui.Ui ):
         tab_name = self.advt_notebook.GetPageText(self.advt_notebook.GetSelection())
         open_cmd(self.mod_list[tab_name].path)
     
+    def _dynamic_ui(self):
+        """动态设置Ui"""
+        self._add_module_list()
+        self._add_advt_page()
+
+        btn_data = (
+            ('start_all_service', self.start_all_service),
+            ('stop_all_service', self.stop_all_service),
+            ('edit_hosts', self.edit_host),
+            ('addto_startup', self.auto_run),
+            ('advt_setting', self.advt_setting),
+            ('basic_setting', self.basic_setting),
+            ('open_cmd', self.open_cmd)
+        )
+
+        for label, btn in btn_data:
+            btn.SetLabel(Lang().get(label))
+
+        plugin_manager = DirectoryPluginManager()
+        plugin_manager.load_plugins()
+        plugins = plugin_manager.get_plugins()
+
+        for plugin in plugins:
+            plugin.start(self.advt_notebook)
+
     def _add_module_list(self):
         for module_name in BaseModule.list_service_module():
             run = wx.CheckBox(self.basic_panel, -1, module_name, size=[120, 13])
