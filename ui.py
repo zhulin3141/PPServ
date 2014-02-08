@@ -130,8 +130,8 @@ class Ui ( wx.Frame ):
 		self.Centre( wx.BOTH )
 		
 		# Connect Events
-		self.start_all_service.Bind( wx.EVT_BUTTON, self.start_all_service_click )
-		self.stop_all_service.Bind( wx.EVT_BUTTON, self.stop_all_service_click )
+		self.start_all_service.Bind( wx.EVT_BUTTON, self.toggle_service_click )
+		self.stop_all_service.Bind( wx.EVT_BUTTON, self.toggle_service_click )
 		self.edit_host.Bind( wx.EVT_BUTTON, self.edit_host_click )
 		self.auto_run.Bind( wx.EVT_BUTTON, self.auto_run_click )
 		self.advt_setting.Bind( wx.EVT_BUTTON, self.advt_setting_click )
@@ -143,11 +143,9 @@ class Ui ( wx.Frame ):
 	
 	
 	# Virtual event handlers, overide them in your derived class
-	def start_all_service_click( self, event ):
+	def toggle_service_click( self, event ):
 		event.Skip()
 	
-	def stop_all_service_click( self, event ):
-		event.Skip()
 	
 	def edit_host_click( self, event ):
 		event.Skip()

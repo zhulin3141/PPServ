@@ -59,7 +59,7 @@ class PPServ( ui.Ui ):
         self.Destroy()
 
     def About(self, event):
-        about_str = '%s %s\n\n%s\n %s: %s' %
+        about_str = '%s %s\n\n%s\n %s: %s' % \
         (
             APPNAME,
             VERSION,
@@ -70,17 +70,14 @@ class PPServ( ui.Ui ):
         wx.MessageBox(about_str, Lang().get('about_title'))
 
     # Handlers for Ui events.
-    def start_all_service_click( self, event ):
+    def toggle_service_click( self, event ):
         for module_name, state in Cache().get("autorun").items():
             if state:
                 mod = self.mod_list[module_name]
-                wx.CallAfter(mod.start_service)
-    
-    def stop_all_service_click( self, event ):
-        for module_name, state in Cache().get("autorun").items():
-            if state:
-                mod = self.mod_list[module_name]
-                wx.CallAfter(mod.stop_service)
+                if event.GetEventObject().GetName() == "start":
+                    wx.CallAfter(mod.start_service)
+                else:
+                    wx.CallAfter(mod.stop_service)
     
     def edit_host_click( self, event ):
         open_hosts(event)
