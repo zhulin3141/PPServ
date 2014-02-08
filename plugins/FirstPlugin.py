@@ -11,6 +11,7 @@ class FirstPlugin(Plugin):
 
     name = "firstPlugin"
     version = '0.0.1'
+    enable = False
 
     def __init__(self):
         Plugin.__init__(self)

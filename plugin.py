@@ -7,6 +7,7 @@ class Plugin(object):
     author = ''
     email = ''
     version = ''
+    enable = True
 
     def __init__(self):
         pass

@@ -113,7 +113,8 @@ class PPServ( ui.Ui ):
         plugins = plugin_manager.get_plugins()
 
         for plugin in plugins:
-            plugin.start(self.advt_notebook)
+            if plugin.enable:
+                plugin.start(self.advt_notebook)
 
     def _add_module_list(self):
         for module_name in BaseModule.list_service_module():
