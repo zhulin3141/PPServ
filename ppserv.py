@@ -58,6 +58,17 @@ class PPServ( ui.Ui ):
         self.tray_icon.Destroy()
         self.Destroy()
 
+    def About(self, event):
+        about_str = '%s %s\n\n%s\n %s: %s' %
+        (
+            APPNAME,
+            VERSION,
+            ''.join([mod.module_name + '\n' for mod in ModuleFactory.get_module_list()]),
+            Lang().get('author'),
+            AUTHOR
+        )
+        wx.MessageBox(about_str, Lang().get('about_title'))
+
     # Handlers for Ui events.
     def start_all_service_click( self, event ):
         for module_name, state in Cache().get("autorun").items():

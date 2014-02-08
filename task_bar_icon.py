@@ -4,7 +4,6 @@
 import wx
 from lang import *
 from common import *
-from module.module_factory import *
 
 class TaskBarIcon(wx.TaskBarIcon):
     ID_MainPage = wx.NewId()
@@ -18,9 +17,9 @@ class TaskBarIcon(wx.TaskBarIcon):
         self.set_taskbar_icon()
         self.Bind(wx.EVT_TASKBAR_LEFT_DCLICK, self.on_taskbar_left_dclick)
         self.Bind(wx.EVT_MENU, open_main_page, id=self.ID_MainPage)
-        self.Bind(wx.EVT_MENU, self.on_about, id=self.ID_About)
-        self.Bind(wx.EVT_MENU, self.on_min_show, id=self.ID_Minshow)
-        self.Bind(wx.EVT_MENU, self.on_close_show, id=self.ID_Closeshow)
+        self.Bind(wx.EVT_MENU, self.frame.About, id=self.ID_About)
+        self.Bind(wx.EVT_MENU, self.frame.OnHide, id=self.ID_Minshow)
+        self.Bind(wx.EVT_MENU, self.frame.OnClose, id=self.ID_Closeshow)
 
     def on_taskbar_left_dclick(self, event):
         if self.frame.IsIconized():
@@ -28,20 +27,6 @@ class TaskBarIcon(wx.TaskBarIcon):
         if not self.frame.IsShown():
            self.frame.Show(True)
         self.frame.Raise()
-
-    def on_about(self, event):
-        about_str = '%s %s\n\n' % (APPNAME, VERSION)
-        for mod in ModuleFactory.get_module_list():
-            about_str += mod.module_name + '\n'
-
-        about_str += "\n %s: %s" % (Lang().get('author'), AUTHOR)
-        wx.MessageBox(about_str, Lang().get('about_title'))
-
-    def on_min_show(self, event):
-        self.frame.OnHide(event)
-
-    def on_close_show(self, event):
-        self.frame.OnClose(event)
 
     def CreatePopupMenu(self):
         menu = wx.Menu()
