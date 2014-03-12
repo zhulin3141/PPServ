@@ -16,9 +16,10 @@ import message_handler
 import logging
 import logging.config
 
+
 # Implementing Ui
-class PPServ( ui.Ui ):
-    def __init__( self, parent ):
+class PPServ(ui.Ui):
+    def __init__(self, parent):
         ui.Ui.__init__( self, parent )
 
         self.SetIcon(wx.Icon('icon.ico', wx.BITMAP_TYPE_ICO))
@@ -42,7 +43,7 @@ class PPServ( ui.Ui ):
         self._set_log()
 
         wx.CallAfter(self._update_state)
-    
+
     #窗口控制事件
     def OnHide(self, event):
         """隐藏"""
@@ -70,7 +71,7 @@ class PPServ( ui.Ui ):
         wx.MessageBox(about_str, Lang().get('about_title'))
 
     # Handlers for Ui events.
-    def toggle_service_click( self, event ):
+    def toggle_service_click(self, event):
         for module_name, state in Cache().get("autorun").items():
             if state:
                 mod = self.mod_list[module_name]
@@ -79,22 +80,22 @@ class PPServ( ui.Ui ):
                 else:
                     wx.CallAfter(mod.stop_service)
     
-    def edit_host_click( self, event ):
+    def edit_host_click(self, event):
         open_hosts(event)
     
-    def auto_run_click( self, event ):
+    def auto_run_click(self, event):
         set_autorun(event)
     
-    def advt_setting_click( self, event ):
+    def advt_setting_click(self, event):
         self.basic_panel.Hide()
         self.advt_panel.Show()
         self.advt_sizer.Fit( self.advt_panel )
     
-    def basic_setting_click( self, event ):
+    def basic_setting_click(self, event):
         self.basic_panel.Show()
         self.advt_panel.Hide()
     
-    def open_cmd_click( self, event ):
+    def open_cmd_click(self, event):
         tab_name = self.advt_notebook.GetPageText(self.advt_notebook.GetSelection())
         open_cmd(self.mod_list[tab_name].path)
     
